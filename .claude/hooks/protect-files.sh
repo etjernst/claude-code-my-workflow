@@ -20,7 +20,7 @@ fi
 # Uses basename matching — add full paths for more precision
 # ============================================================
 PROTECTED_PATTERNS=(
-  "bibliography.bib"
+  "salinity.bib"
   "settings.json"
 )
 

@@ -42,5 +42,5 @@ prez/*.tex
 
 ## Bibliography location:
 ```
-paper/bibliography.bib
+paper/salinity.bib
 ```

@@ -1,11 +1,11 @@
 ---
 name: verifier
-description: End-to-end verification agent. Checks that paper compiles, slides compile, and Stata scripts are well-formed. Use proactively before committing or creating PRs.
+description: End-to-end verification agent. Checks that paper compiles, slides compile, and Python scripts are well-formed. Use proactively before committing or creating PRs.
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---
 
-You are a verification agent for an academic research project (paper + slides + Stata).
+You are a verification agent for an academic research project (paper + slides + Python).
 
 ## Your Task
 
@@ -34,16 +34,16 @@ TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode FILENAME.tex 
 - Verify PDF was generated: `ls -la FILENAME.pdf`
 - Note: bibliography resolution requires BIBINPUTS=../paper:
 
-### For `.do` files (Stata scripts):
-- Read the file and check for obvious syntax errors
-- Verify globals/paths reference project directory structure (not hardcoded)
-- Confirm log file open/close commands are present
+### For `.py` files (Python scripts):
+- Check syntax with `python -m py_compile scripts/FILENAME.py`
+- Verify all paths use relative references (not hardcoded absolute paths)
+- Confirm logging is configured (using `logging` module, not bare `print()`)
 - Verify output files are directed to `output/figures/` or `output/tables/`
-- If Stata is available: `stata-mp -b do scripts/FILENAME.do`
-- Check log file for errors
+- If Python is available: `python scripts/FILENAME.py`
+- Check output for errors
 
 ### For bibliography:
-- Check that all `\cite` references in modified `.tex` files have entries in `paper/bibliography.bib`
+- Check that all `\cite` references in modified `.tex` files have entries in `paper/salinity.bib`
 
 ## Report Format
 

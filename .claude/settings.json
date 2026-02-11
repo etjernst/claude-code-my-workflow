@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "C:\\Users\\maand\\anaconda3\\python.exe C:\\Users\\maand\\OneDrive\\Desktop\\git\\ckt\\.claude\\hooks\\log-reminder.py",
+            "command": "C:\\Users\\maand\\anaconda3\\python.exe C:\\Users\\maand\\OneDrive\\Desktop\\git\\salty-water\\.claude\\hooks\\log-reminder.py",
             "timeout": 10
           }
         ]

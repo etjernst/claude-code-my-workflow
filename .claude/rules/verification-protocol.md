@@ -2,7 +2,7 @@
 paths:
   - "paper/**/*.tex"
   - "prez/**/*.tex"
-  - "scripts/**/*.do"
+  - "scripts/**/*.py"
 ---
 
 # Task Completion Verification Protocol
@@ -23,19 +23,19 @@ paths:
 4. Open the PDF to verify: `start file.pdf`
 5. Report verification results
 
-## For Stata Scripts (scripts/):
-1. Check that the .do file has no obvious syntax errors
-2. Verify globals/paths reference project directory structure
-3. Confirm log file open/close commands are present
+## For Python Scripts (scripts/):
+1. Check syntax with `python -m py_compile scripts/filename.py`
+2. Verify all paths use `pathlib.Path` with relative references from project root
+3. Confirm logging is configured (using `logging` module)
 4. Verify output files (figures, tables) are directed to `output/figures/` or `output/tables/`
-5. If Stata is available, run: `stata-mp -b do scripts/filename.do`
-6. Check log file for errors
+5. If Python is available, run: `python scripts/filename.py`
+6. Check log output for errors
 
 ## Common Pitfalls:
-- **Bibliography not found in slides**: prez/ needs BIBINPUTS=../paper: to find bibliography.bib
+- **Bibliography not found in slides**: prez/ needs BIBINPUTS=../paper: to find salinity.bib
 - **Preamble not found**: Both paper/ and prez/ need TEXINPUTS=../Preambles: for shared style files
 - **Assuming success**: Always verify output files exist AND contain correct content
-- **Hardcoded paths in Stata**: All paths should use globals set in master.do
+- **Hardcoded paths in Python**: All paths should use pathlib.Path with relative references
 
 ## Verification Checklist:
 ```

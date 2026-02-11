@@ -1,56 +1,170 @@
 \documentclass[12pt]{article}
 
-\usepackage{fontspec}
+% ============================================================
+% Packages
+% ============================================================
+\usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{natbib}
-\usepackage{geometry}
-\geometry{margin=1in}
 \usepackage{setspace}
-\onehalfspacing
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage[T1]{fontenc}
+% \usepackage{lmodern} % Uncomment in Overleaf
 
-\title{Selection and Heterogeneity in the Returns to Migration}
-\author{Eduardo Cenci \and Marieke Kleemans \and Emilia Tjernstr\"{o}m}
+\doublespacing
+\bibliographystyle{plainnat} % Switch to aer in Overleaf
+
+% ============================================================
+\title{\textbf{The Productive Cost of Salty Water:\\ Causal Evidence from Salt Interception in the Murray--Darling Basin}\thanks{Draft: February 2026. For comments and discussion only. We thank [acknowledgments]. All errors remain our own.}}
+
+\author{Emilia Tjernstr{\"o}m\thanks{Department of Economics, Macquarie University. Email: \texttt{emilia.tjernstrom@mq.edu.au}.}}
+
 \date{\today}
 
+% ============================================================
 \begin{document}
-
 \maketitle
-
+\singlespacing
 \begin{abstract}
-This paper investigates selection and heterogeneity in the returns to migration. We examine how migrants differ from non-migrants along observable and unobservable dimensions, and how these differences shape the distribution of returns to migration across individuals.
+\noindent Irrigation water salinity affects crop physiology, but no credible estimate exists of its effect on farm-level economic outcomes. We provide the first causal estimate by exploiting the staggered commissioning of fourteen salt interception schemes along the lower Murray River in Australia between 1991 and 2014. These engineered groundwater-pumping systems reduce downstream river salinity at locations determined by Tertiary geology. Using high-frequency monitoring data linked to farm outcomes, we estimate that a one-standard-deviation reduction in salinity increases agricultural revenue per hectare by [X] percent and land values by [Y] percent. The effect operates through both direct yield gains and reallocation toward higher-value, salt-sensitive crops. Our estimates imply that the water quality channel---absent from climate damage functions---is quantitatively important for irrigated agriculture.
+
+\medskip
+\noindent \textbf{JEL Codes:} Q15, Q25, Q54, O13 \\
+\textbf{Keywords:} Water quality, salinity, agricultural productivity, climate damages, instrumental variables
 \end{abstract}
 
+\newpage
+\onehalfspacing
+% ============================================================
 \section{Introduction}
-\label{sec:intro}
+% ============================================================
 
-Migration transforms the economic prospects of millions of individuals each year. Understanding who migrates, why they migrate, and what they gain from migration remains central to labor economics and development economics. This paper contributes to this literature by examining the heterogeneity in returns to migration and the selection patterns that generate it.
+Water quality matters for agricultural production. Dissolved salts reduce crop yields through well-understood physiological mechanisms, and irrigated agriculture---which accounts for 40 percent of global food production on 20 percent of cultivated land---almost never treats its water supply. Yet no credible causal estimate links irrigation water salinity to farm-level economic outcomes. The difficulty is that salinity correlates with drought, with agricultural activity itself, and with unobserved land characteristics, so regressions of productivity on water quality confound the parameter of interest with selection and reverse causality.
 
-A large body of work documents positive average returns to migration \citep{Imbens2004_nonparametric}. Migrants tend to earn more than observationally similar non-migrants, even after accounting for selection on observable characteristics. The magnitude of these gains varies across contexts, but the direction remains remarkably consistent.
+This paper provides such an estimate. We exploit the staggered commissioning of fourteen salt interception schemes (SIS) along the lower Murray River in Australia between 1991 and 2014 to instrument for changes in irrigation water salinity at downstream agricultural locations. Each scheme pumps saline groundwater away from the river at a location determined by Tertiary and Quaternary geology---where marine-origin salt stores naturally discharge into surface water---and disposes of brine in inland evaporation basins. Commissioning timing depended on engineering assessments, federal--state cost-sharing agreements, and Ministerial Council approval. Neither the siting nor the timing responded to downstream farm productivity.
 
-Average returns, however, mask substantial heterogeneity. Some migrants gain considerably from relocation while others gain little or even lose relative to their counterfactual earnings at origin. Understanding this heterogeneity requires moving beyond average treatment effects to characterize the full distribution of individual-level returns.
+We estimate that a one-standard-deviation reduction in electrical conductivity (EC) at an irrigator's offtake point increases gross agricultural revenue per hectare by [X] percent, with a 95~percent confidence interval of [A, B]. The effect persists for at least [Z] years following commissioning. We find evidence of two channels: a direct yield gain for incumbent crops, concentrated among salt-sensitive varieties (wine grapes, citrus, stone fruit), and a reallocation toward these higher-value crops as water quality improves. Land values capitalize the improvement, rising by approximately [Y] percent. The implied return on salt interception investment is [\$R] in agricultural productivity per dollar of scheme cost.
 
-\section{Conceptual Framework}
-\label{sec:framework}
+These results matter for three areas of economics.
 
-Consider an individual $i$ who chooses between staying at origin ($D_i = 0$) and migrating ($D_i = 1$). Let $Y_i(1)$ denote potential earnings if individual $i$ migrates, and $Y_i(0)$ denote potential earnings if individual $i$ stays. The individual return to migration equals:
-\begin{equation}
-\label{eq:return}
-\Delta_i = Y_i(1) - Y_i(0)
+First, they speak to climate damage estimation. The standard approach relates temperature or precipitation to economic outcomes \citep{schlenker2009nonlinear, dell2012temperature, burke2015global, hsiang2017estimating}. Water enters these frameworks only as a quantity variable---precipitation shortfalls, runoff changes, snowpack loss. Water \emph{quality} degradation---driven by drought-induced salt concentration, sea-level intrusion into coastal aquifers, or increased wildfire and erosion---enters no damage function in any integrated assessment model. If salinity effects on irrigated agriculture are large, current damage estimates undercount climate costs for every region where warming degrades water quality. Our estimates provide the parameter needed to assess this gap.
+
+Second, our results contribute to the economics of water pollution, where production-side evidence is scarce. \citet{keiser2019consequences} estimate the welfare effects of the U.S.\ Clean Water Act through housing values---a consumption amenity. \citet{keiser2019burning} document that water quality research is ``relatively uncommon'' in economics relative to air quality. The one paper studying water pollution and agricultural output---\citet{hagerty2025industrial}, on industrial effluent in India---finds small aggregate effects, attributing the null to limited farmer exposure to river water and the heterogeneous composition of industrial discharge. Our setting overcomes both limitations: MDB irrigators draw exclusively from the river system, and salinity is a single, well-measured pollutant with a known dose-response relationship \citep{maas1977salt, munns2008mechanisms}.
+
+Third, we provide evidence relevant to water infrastructure investment decisions. Governments spend hundreds of millions of dollars on desalination, drainage, and salinity management \citep{hart2020salinity}. The productive return to these investments has not been estimated causally. More broadly, the MDB hosts the world's most active water market \citep{wheeler2014water}, and the crop-switching response we document shows how quality improvements interact with market-mediated reallocation---a channel absent from engineering models of salinity management.
+
+The identification strategy proceeds as follows. In the first stage, we regress EC at downstream monitoring stations on indicators for upstream SIS commissioning, controlling for station and time fixed effects and upstream flow volume. The fourteen schemes generated EC reductions at Morgan (the basin's reference point) ranging from 3.5 to 61~$\mu$S/cm, with proportionally larger reductions at nearer stations. We implement the \citet{callaway2021difference} estimator to address bias from staggered adoption with heterogeneous treatment effects. In the second stage, we use the instrumented EC change to estimate effects on agricultural outcomes---gross value of production, crop composition, and land values---at the SA2 level. Standard errors cluster at the monitoring-station level; we also report wild cluster bootstrap inference given the small number of treatment events.
+
+The exclusion restriction requires that SIS commissioning affected downstream agriculture only through river salinity. Two features of the setting support this assumption. SIS locations reflect subsurface geology fixed millions of years before modern agriculture; they deliver no irrigation water, fertilizer, or technical assistance to downstream farms. We test for pre-trends in agricultural outcomes before each commissioning date and find none. We also check whether commissioning coincided with other agricultural support programs and find no systematic co-timing.
+
+The paper relates to several additional literatures. On agricultural adaptation to water scarcity, \citet{hagerty2022adaptation} shows that California farmers adapt to surface water reductions through crop switching but do not fully offset lost production; \citet{burke2016adaptation} finds limited long-run adaptation to temperature in U.S.\ agriculture. Our results extend this work to the quality dimension: we show that farmers adapt to \emph{improved} quality by reallocating toward higher-value crops, suggesting that quality constraints bind in practice. On water markets, \citet{grafton2018economics} and \citet{zuo2016effects} study MDB water trading; we add evidence that water quality shapes the spatial allocation of water demand across the market.
+
+The remainder of the paper proceeds as follows. Section~\ref{sec:background} describes the MDB salinity problem and salt interception program. Section~\ref{sec:data} presents our data. Section~\ref{sec:design} details the empirical strategy. Section~\ref{sec:results} reports results. Section~\ref{sec:mechanisms} explores mechanisms. Section~\ref{sec:implications} calculates implications for climate damage assessment. Section~\ref{sec:conclusion} concludes.
+
+
+% ============================================================
+\section{Background: Salinity in the Murray--Darling Basin}\label{sec:background}
+% ============================================================
+
+\subsection{The Salinity Problem}
+
+The southern Murray--Darling Basin overlies naturally saline geological formations. Marine-origin salts deposited during Tertiary-era ocean incursions are stored in Parilla Sand aquifers and Mallee limestone \citep{nsw2009salinityaudit}. Post-settlement land clearing and irrigation development raised water tables, mobilizing these salts into rivers. By the mid-1980s, salinity at Morgan regularly exceeded the 800~$\mu$S/cm management target \citep{hart2020salinity}.
+
+Salinity affects agriculture through two physiological mechanisms \citep{munns2008mechanisms}. First, dissolved salts reduce the osmotic potential of soil water, limiting root uptake even when water is physically present. Second, specific ions (sodium, chloride, boron) cause direct toxicity at elevated concentrations. \citet{maas1977salt} and \citet{ayers1985water} established crop-specific threshold-slope models: yields remain unaffected below a threshold EC, then decline linearly. Thresholds vary from approximately 1,000~$\mu$S/cm (sensitive crops such as stone fruit) to 6,000~$\mu$S/cm (tolerant crops such as barley). These agronomic functions predict that salinity reductions should disproportionately benefit areas growing sensitive crops---a prediction we test.
+
+\subsection{Salt Interception Schemes}
+
+The Commonwealth and Basin state governments constructed fourteen salt interception schemes between 1991 and 2014 at locations where saline groundwater discharges into rivers. Each scheme consists of production bores that pump saline groundwater and pipeline infrastructure conveying brine to inland evaporation basins. By 2015, the schemes intercepted approximately 400,000 tonnes of salt annually \citep{hart2020salinity}.
+
+Three features of SIS siting and timing matter for identification. Locations reflect hydrogeological surveys identifying aquifer--river intersections---a geological characteristic determined before modern agriculture. Commissioning depended on Ministerial Council approval, federal--state cost-sharing, and multi-year construction. Schemes targeted basin-wide salinity objectives at Morgan, not specific downstream agricultural interests.
+
+
+% ============================================================
+\section{Data}\label{sec:data}
+% ============================================================
+
+\subsection{Water Quality Monitoring}
+
+We compile salinity data from the Murray--Darling Basin Authority and state monitoring networks. Continuous EC measurements at dozens of stations along the Murray River extend from the early 1980s to the present \citep{biswas2019mountain}. Victorian stations report through the Water Measurement Information System; NSW stations report through WaterNSW. Daily or sub-daily frequency enables precise estimation of the first-stage effect of SIS commissioning on downstream salinity.
+
+\subsection{Agricultural Outcomes}
+
+We measure productivity from three sources: the ABS Agricultural Census (2010--11, 2015--16, 2020--21) at the SA2 level \citep{abs2022agcensus}; annual Value of Agricultural Commodities Produced at the SA2 level; and ABARES farm-level financial data for broadacre and dairy operations \citep{abares2023farmsurvey}.
+
+\subsection{Water Market Data}
+
+State water registries record entitlement and allocation trades, including price, volume, and buyer--seller locations. These data allow us to test for quality-driven spatial reallocation of water use.
+
+\subsection{Spatial Data}
+
+We link SIS locations, monitoring stations, and agricultural areas using the Bureau of Meteorology's Australian Hydrological Geospatial Fabric, which provides a digitized river network with catchment boundaries.
+
+
+% ============================================================
+\section{Empirical Strategy}\label{sec:design}
+% ============================================================
+
+\subsection{Overview}
+
+We estimate the causal effect of irrigation water salinity on agricultural productivity using a two-stage least squares (2SLS) estimator. SIS commissioning instruments for EC at downstream monitoring stations. The identifying assumption is that commissioning affected agricultural outcomes only through its effect on river salinity.
+
+\subsection{First Stage}
+
+Let $EC_{st}$ denote electrical conductivity at monitoring station $s$ in period $t$. Let $D_{st}$ indicate whether any salt interception scheme upstream of $s$ has been commissioned by $t$. The first-stage equation is:
+\begin{equation}\label{eq:first_stage}
+    EC_{st} = \alpha_s + \gamma_t + \phi \, D_{st} + \mathbf{X}_{st}'\boldsymbol{\delta} + \nu_{st}
 \end{equation}
-The fundamental problem of causal inference prevents observing both potential outcomes for any individual. We observe $Y_i = D_i Y_i(1) + (1 - D_i) Y_i(0)$.
+where $\alpha_s$ and $\gamma_t$ are station and time fixed effects, and $\mathbf{X}_{st}$ includes upstream flow volume and seasonal indicators. We predict $\hat{\phi} < 0$.
 
-Selection into migration depends on both potential outcomes. Following \citet{Angrist2009_mostly_harmless}, individuals migrate when the expected gain exceeds migration costs $c_i$:
-\begin{equation}
-\label{eq:selection}
-D_i = \mathbf{1}\left[ E_i[\Delta_i] > c_i \right]
+We also construct a continuous treatment intensity measure equal to the sum of expected EC reductions from all upstream schemes commissioned by $t$, scaled by hydrological distance. This allows us to estimate dose-response effects across the fourteen schemes.
+
+For the staggered adoption design, we implement the \citet{callaway2021difference} estimator to address heterogeneous treatment effects \citep{roth2023whats, sun2021estimating, borusyak2024revisiting}.
+
+\subsection{Second Stage}
+
+Let $Y_{it}$ denote an agricultural outcome for area $i$ in year $t$. The second-stage equation is:
+\begin{equation}\label{eq:second_stage}
+    Y_{it} = \alpha_i + \gamma_t + \beta \, \widehat{EC}_{it} + \mathbf{X}_{it}'\boldsymbol{\delta} + \varepsilon_{it}
 \end{equation}
+where $\widehat{EC}_{it}$ is the instrumented EC at the nearest monitoring station. Controls include temperature, precipitation, and water allocation volumes.
 
-\section{Conclusion}
-\label{sec:conclusion}
+\subsection{Identifying Assumptions}
 
-This paper examines selection and heterogeneity in the returns to migration. We develop methods to characterize the distribution of individual returns and the selection patterns that shape observed migration flows.
+\paragraph{Relevance.} Bookpurnong alone reduced mean EC at Morgan by 21.8~$\mu$S/cm; near-scheme reductions are far larger. We report $F$-statistics for each specification.
 
-\bibliographystyle{plainnat}
-\bibliography{bibliography}
+\paragraph{Exclusion.} SIS siting depends on subsurface geology; commissioning timing depends on bureaucratic processes. Schemes deliver no inputs other than improved water quality. We test for pre-trends and correlated policy changes.
+
+\subsection{Heterogeneity}
+
+We estimate effects separately by crop type (sensitive versus tolerant), distance from scheme, and water-market participation. We decompose the total effect into intensive-margin yield gains and extensive-margin crop substitution.
+
+\subsection{Inference}
+
+Standard errors cluster at the monitoring-station level. We also report wild cluster bootstrap $p$-values and Conley spatial standard errors (50~km bandwidth).
+
+
+% ============================================================
+% Placeholder sections
+% ============================================================
+
+\section{Results}\label{sec:results}
+[To be completed.]
+
+\section{Mechanisms and Heterogeneity}\label{sec:mechanisms}
+[To be completed.]
+
+\section{Implications for Climate Damage Assessment}\label{sec:implications}
+[To be completed.]
+
+\section{Conclusion}\label{sec:conclusion}
+[To be completed.]
+
+
+% ============================================================
+\newpage
+\bibliography{salinity}
 
 \end{document}

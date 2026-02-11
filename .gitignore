@@ -1,5 +1,5 @@
 # ==============================================================================
-# .gitignore for Migration Returns Paper (CKT)
+# .gitignore for Salty Water Project
 # ==============================================================================
 
 # LaTeX build artifacts
@@ -21,20 +21,21 @@
 # Compiled PDFs (uncomment to track specific PDFs)
 # *.pdf
 
-# Stata artifacts
-*.smcl
+# Python artifacts
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Script logs
 scripts/logs/*.log
-*.dta
 
 # Data (large/sensitive -- do not track)
 data/**/*.csv
 data/**/*.dta
 data/**/*.xlsx
-
-# Python
-__pycache__/
-*.pyc
-*.pyo
+data/**/*.parquet
 
 # OS files
 .DS_Store

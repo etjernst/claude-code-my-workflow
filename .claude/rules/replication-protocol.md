@@ -1,6 +1,6 @@
 ---
 paths:
-  - "scripts/**/*.do"
+  - "scripts/**/*.py"
   - "output/**"
 ---
 
@@ -36,17 +36,17 @@ Before writing any analysis code:
 - [ ] Match original specification exactly (covariates, sample, clustering, SE computation)
 - [ ] Save all intermediate results
 
-### Stata Conventions
+### Python Conventions
 
 | Convention | Example | Notes |
 |-----------|---------|-------|
-| Globals for paths | `global root "..."` | Set in master.do, never hardcode |
-| Log files | `log using "$logs/analysis.log", replace` | Always log |
-| Variable labels | `label var earnings "Annual earnings (USD)"` | Label all key vars |
-| Output export | `graph export "$figures/fig1.pdf", replace` | Always to output/ |
-| Clustering | `reg y x, cluster(id)` | Document clustering level |
-| Fixed effects | `reghdfe y x, absorb(id year)` | Specify all FE |
-| Bootstrap | `bootstrap, reps(999) seed(12345)` | Always set seed |
+| Relative paths | `Path("data/processed/panel.parquet")` | Use pathlib, never hardcode absolute |
+| Logging | `logging.getLogger(__name__)` | Use logging module, not print() |
+| Docstrings | `"""Estimate IV model for EC impact."""` | Module and function docstrings |
+| Output export | `fig.savefig("output/figures/fig1.pdf")` | Always to output/ |
+| Clustering | `fit(cov_type='clustered', cluster_entity=...)` | Document clustering level |
+| Fixed effects | `PanelOLS(..., entity_effects=True, time_effects=True)` | Specify all FE |
+| Reproducibility | `np.random.seed(12345)` | Always set seed |
 
 ---
 
@@ -88,7 +88,7 @@ Save to `quality_reports/replication_report.md`:
 - **Target:** X | **Investigation:** ... | **Resolution:** ...
 
 ## Environment
-- Stata version, key packages (with versions), data source
+- Python version, key packages (with versions), data source
 ```
 
 ---

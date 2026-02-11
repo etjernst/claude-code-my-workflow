@@ -7,11 +7,21 @@ When a mistake is corrected, append a `[LEARN:category]` entry below.
 
 ## Project Info
 
-- **Project:** Selection and Heterogeneity in the Returns to Migration
-- **Authors:** Eduardo Cenci, Marieke Kleemans, Emilia Tjernstrom
-- **Analysis:** Stata (.do files in scripts/)
+- **Project:** The Productive Cost of Salty Water: Causal Evidence from Salt Interception in the Murray--Darling Basin
+- **Author:** Emilia Tjernstrom
+- **Analysis:** Python (scripts in scripts/)
 - **Writing:** LaTeX (paper in paper/, slides in prez/)
 - **Output:** Figures → output/figures/, Tables → output/tables/
+- **Bibliography:** paper/salinity.bib
+
+## Project-Specific Notes
+
+- **Identification strategy:** IV using staggered SIS commissioning as instruments for downstream EC changes
+- **Units of observation:** SA2-level agricultural outcomes in the Murray-Darling Basin
+- **Key measurement:** Electrical Conductivity (EC) -- measured in microsiemens per centimetre (uS/cm); 1 dS/m = 1000 uS/cm
+- **Geographic scope:** Murray-Darling Basin, Australia
+- **Data sources:** MDBA salinity registers, BoM water data, ABS agricultural census, SA2 boundaries
+- **14 SIS schemes:** Woolpunda, Waikerie, Qualco-Sunlands, Loxton, Bookpurnong, Pike, Murtho, Rufus River, Buronga, Mildura-Merbein, Barr Creek, Pyramid Creek, Boundary Bend, Mallee Cliffs
 
 ## Environment
 

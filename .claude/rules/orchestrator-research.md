@@ -1,13 +1,13 @@
 ---
 paths:
-  - "scripts/**/*.do"
+  - "scripts/**/*.py"
   - "explorations/**"
   - "output/**"
 ---
 
 # Research Project Orchestrator (Simplified)
 
-**For Stata scripts, data analysis, and output generation** -- use this simplified loop instead of the full multi-agent orchestrator.
+**For Python scripts, data analysis, and output generation** -- use this simplified loop instead of the full multi-agent orchestrator.
 
 ## The Simple Loop
 
@@ -17,7 +17,7 @@ Plan approved → orchestrator activates
   Step 1: IMPLEMENT — Execute plan steps
   │
   Step 2: VERIFY — Run code, check outputs
-  │         Stata scripts: .do file runs without error
+  │         Python scripts: .py file runs without error
   │         Log files: check for error messages
   │         Figures: created in output/figures/, correct format
   │         Tables: created in output/tables/, correct format
@@ -34,11 +34,11 @@ Plan approved → orchestrator activates
 
 ## Verification Checklist
 
-- [ ] Script runs without errors (check log file)
-- [ ] All globals/paths use master.do conventions
+- [ ] Script runs without errors
+- [ ] All paths use relative paths from project root
 - [ ] No hardcoded absolute paths
-- [ ] Log file opened and closed properly
+- [ ] Logging configured properly
 - [ ] Output files created at expected paths (output/figures/, output/tables/)
-- [ ] Variable labels applied to key variables
+- [ ] Docstrings present on modules and public functions
 - [ ] Tolerance checks pass (if applicable)
 - [ ] Quality score >= 80

@@ -1,7 +1,7 @@
 # Workflow Quick Reference
 
-**Project:** Selection and Heterogeneity in the Returns to Migration
-**Tools:** LaTeX (paper + slides), Stata (analysis)
+**Project:** The Productive Cost of Salty Water
+**Tools:** LaTeX (paper + slides), Python (analysis)
 **Model:** Contractor (you direct, Claude orchestrates)
 
 ---
@@ -51,7 +51,7 @@ Repeat
 
 ## Non-Negotiables
 
-- **Paths:** Stata globals set in master.do; LaTeX uses TEXINPUTS for Preambles/
+- **Paths:** Python scripts use relative paths from project root; LaTeX uses TEXINPUTS for Preambles/
 - **Figures:** Publication-ready, polished, beautiful. All output to output/figures/
 - **Tables:** All output to output/tables/
 - **Writing style:** Active voice, strong verbs, no nominalizations, no bold subheadings, no `\paragraph{}`

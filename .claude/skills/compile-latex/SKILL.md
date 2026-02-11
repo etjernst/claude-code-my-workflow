@@ -70,4 +70,4 @@ TEXINPUTS=../Preambles:$TEXINPUTS BIBINPUTS=../paper:$BIBINPUTS latexmk -xelatex
 - **Always use XeLaTeX**, never pdflatex
 - **TEXINPUTS** is required: shared style files live in `Preambles/`
 - **BIBINPUTS** is needed for prez/ only: the `.bib` file lives in `paper/`
-- For paper/, bibtex finds bibliography.bib in the same directory automatically
+- For paper/, bibtex finds salinity.bib in the same directory automatically

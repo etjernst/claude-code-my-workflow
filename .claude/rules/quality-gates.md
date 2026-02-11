@@ -2,7 +2,7 @@
 paths:
   - "paper/**/*.tex"
   - "prez/**/*.tex"
-  - "scripts/**/*.do"
+  - "scripts/**/*.py"
 ---
 
 # Quality Gates & Scoring Rubrics
@@ -27,17 +27,18 @@ paths:
 | Minor | Font size reduction | -1 per slide |
 | Minor | Long lines (>100 chars) | -1 (EXCEPT documented math formulas) |
 
-## Stata Scripts (.do)
+## Python Scripts (.py)
 
 | Severity | Issue | Deduction |
 |----------|-------|-----------|
 | Critical | Syntax errors | -100 |
-| Critical | Hardcoded absolute paths (not using globals) | -20 |
-| Critical | Missing log file open/close | -15 |
-| Major | No variable labels | -5 |
+| Critical | Hardcoded absolute paths (not using relative paths) | -20 |
+| Critical | No module docstring | -15 |
+| Major | Missing type hints on public functions | -5 |
 | Major | Missing output export (figure/table) | -5 |
 | Major | No comments for non-obvious operations | -3 |
-| Minor | Inconsistent spacing/indentation | -1 |
+| Minor | PEP 8 violations | -1 |
+| Minor | Unused imports | -1 |
 
 ## Enforcement
 

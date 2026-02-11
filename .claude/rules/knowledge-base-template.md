@@ -1,14 +1,14 @@
 ---
 paths:
-  - "Slides/**/*.tex"
-  - "Quarto/**/*.qmd"
-  - "scripts/**/*.R"
+  - "paper/**/*.tex"
+  - "prez/**/*.tex"
+  - "scripts/**/*.py"
 ---
 
-# Course Knowledge Base: [YOUR COURSE NAME]
+# Project Knowledge Base: [YOUR PROJECT NAME]
 
 <!-- Fill in the tables below with YOUR domain-specific content.
-     Claude reads this before creating/modifying any lecture content. -->
+     Claude reads this before creating/modifying any content. -->
 
 ## Notation Registry
 
@@ -22,7 +22,7 @@ paths:
 |--------|---------|------------|
 | | | |
 
-## Lecture Progression
+## Section Progression
 
 | # | Title | Core Question | Key Notation | Key Method |
 |---|-------|--------------|-------------|------------|
@@ -31,13 +31,13 @@ paths:
 
 ## Empirical Applications
 
-| Application | Paper | Dataset | Lecture(s) | Purpose |
+| Application | Paper | Dataset | Section(s) | Purpose |
 |------------|-------|---------|------------|---------|
 | | | | | |
 
 ## Design Principles
 
-| Principle | Evidence | Lectures Applied |
+| Principle | Evidence | Sections Applied |
 |-----------|----------|-----------------|
 | | | |
 
@@ -47,7 +47,7 @@ paths:
 |-------------|---------------|-----------|
 | | | |
 
-## R Code Pitfalls
+## Python Code Pitfalls
 
 | Bug | Impact | Fix |
 |-----|--------|-----|

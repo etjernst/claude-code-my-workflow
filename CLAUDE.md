@@ -1,7 +1,7 @@
-# CLAUDE.MD -- Selection and Heterogeneity in the Returns to Migration
+# CLAUDE.MD -- The Productive Cost of Salty Water
 
-**Project:** Selection and Heterogeneity in the Returns to Migration
-**Authors:** Eduardo Cenci, Marieke Kleemans, Emilia Tjernstrom
+**Project:** The Productive Cost of Salty Water: Causal Evidence from Salt Interception in the Murray--Darling Basin
+**Author:** Emilia Tjernstrom
 **Branch:** main
 
 ---
@@ -10,7 +10,7 @@
 
 - **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
 - **Verify after** -- compile and confirm output at the end of every task
-- **LaTeX is authoritative** -- the paper `.tex` is the single source of truth; Stata `.do` files produce all analytical output
+- **LaTeX is authoritative** -- the paper `.tex` is the single source of truth; Python scripts produce all analytical output
 - **Quality gates** -- nothing ships below 80/100
 - **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to MEMORY.md
 
@@ -19,19 +19,24 @@
 ## Folder Structure
 
 ```
-ckt/
+salty-water/
 ├── CLAUDE.md                    # This file
 ├── .claude/                     # Rules, skills, agents, hooks
 ├── paper/                       # LaTeX paper (.tex, .bib)
-│   └── bibliography.bib         # Bibliography lives with main.tex
+│   └── salinity.bib             # Bibliography lives with main.tex
 ├── prez/                        # Beamer slides (.tex files)
-├── scripts/                     # Stata .do files
-│   └── logs/                    # Stata log files
+├── scripts/                     # Python analysis scripts
+│   └── logs/                    # Script log files
 ├── data/                        # Data files
-│   ├── countries/
-│   └── processed/
+│   ├── sis/                     # Salt Interception Scheme data
+│   ├── salinity/                # EC and salinity monitoring
+│   ├── agricultural/            # Farm-level and crop data
+│   ├── water_market/            # Water allocation and trade
+│   ├── spatial/                 # Shapefiles, boundaries, GIS
+│   ├── climate/                 # Weather and climate data
+│   └── processed/               # Analysis-ready datasets
 ├── output/                      # All generated results
-│   ├── figures/                 # ALL figures (Stata, TikZ, diagrams, etc.)
+│   ├── figures/                 # ALL figures (Python, TikZ, diagrams, etc.)
 │   └── tables/
 ├── Preambles/                   # Shared LaTeX resources (style files)
 ├── master_supporting_docs/      # Reference papers, notes
@@ -57,8 +62,8 @@ BIBINPUTS=../paper:$BIBINPUTS bibtex file
 TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
 
-# Stata (future -- run from project root)
-# stata-mp -b do scripts/master.do
+# Python analysis (run from project root)
+python scripts/main.py
 ```
 
 ---
