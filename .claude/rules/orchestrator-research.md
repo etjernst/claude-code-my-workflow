@@ -1,13 +1,13 @@
 ---
 paths:
-  - "scripts/**/*.R"
+  - "scripts/**/*.do"
   - "explorations/**"
-  - "Figures/**/*.R"
+  - "output/**"
 ---
 
 # Research Project Orchestrator (Simplified)
 
-**For R scripts, simulations, and data analysis** -- use this simplified loop instead of the full multi-agent orchestrator.
+**For Stata scripts, data analysis, and output generation** -- use this simplified loop instead of the full multi-agent orchestrator.
 
 ## The Simple Loop
 
@@ -17,9 +17,10 @@ Plan approved → orchestrator activates
   Step 1: IMPLEMENT — Execute plan steps
   │
   Step 2: VERIFY — Run code, check outputs
-  │         R scripts: Rscript runs without error
-  │         Simulations: set.seed reproducibility
-  │         Plots: PDF/PNG created, correct format
+  │         Stata scripts: .do file runs without error
+  │         Log files: check for error messages
+  │         Figures: created in output/figures/, correct format
+  │         Tables: created in output/tables/, correct format
   │         If verification fails → fix → re-verify
   │
   Step 3: SCORE — Apply quality-gates rubric
@@ -33,10 +34,11 @@ Plan approved → orchestrator activates
 
 ## Verification Checklist
 
-- [ ] Script runs without errors
-- [ ] All packages loaded at top
+- [ ] Script runs without errors (check log file)
+- [ ] All globals/paths use master.do conventions
 - [ ] No hardcoded absolute paths
-- [ ] `set.seed()` once at top if stochastic
-- [ ] Output files created at expected paths
+- [ ] Log file opened and closed properly
+- [ ] Output files created at expected paths (output/figures/, output/tables/)
+- [ ] Variable labels applied to key variables
 - [ ] Tolerance checks pass (if applicable)
 - [ ] Quality score >= 80

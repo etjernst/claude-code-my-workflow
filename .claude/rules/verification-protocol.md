@@ -1,53 +1,48 @@
 ---
 paths:
-  - "Slides/**/*.tex"
-  - "Quarto/**/*.qmd"
-  - "docs/**"
+  - "paper/**/*.tex"
+  - "prez/**/*.tex"
+  - "scripts/**/*.do"
 ---
 
 # Task Completion Verification Protocol
 
 **At the end of EVERY task, Claude MUST verify the output works correctly.** This is non-negotiable.
 
-## For Quarto/HTML Slides:
-1. Run `./scripts/sync_to_docs.sh` (or `./scripts/sync_to_docs.sh LectureN`) to render and deploy
-2. Open the HTML in browser: `open docs/slides/LectureX.html`
-3. Verify images display by reading 2-3 image files to confirm valid content
-4. Check HTML source for correct image paths
-5. Check for overflow by scanning dense slides
-6. Verify environment parity: every Beamer box environment has a CSS equivalent in the QMD
-7. Report verification results
+## For LaTeX Paper (paper/):
+1. Compile with 3-pass xelatex + bibtex from `paper/` directory
+2. Check for compilation errors and overfull hbox warnings
+3. Open the PDF to verify figures and tables render: `start main.pdf`
+4. Verify all `\ref{}` and `\cite{}` commands resolve (no "??" in output)
+5. Report verification results
 
-## For LaTeX/Beamer Slides:
-1. Compile with xelatex and check for errors
-2. Open the PDF to verify figures render
-3. Check for overfull hbox warnings
+## For Beamer Slides (prez/):
+1. Compile with 3-pass xelatex + bibtex from `prez/` directory
+2. Set TEXINPUTS to `../Preambles:` and BIBINPUTS to `../paper:` for shared resources
+3. Check for compilation errors and overfull hbox warnings
+4. Open the PDF to verify: `start file.pdf`
+5. Report verification results
 
-## For TikZ Diagrams in HTML/Quarto:
-1. Browsers **cannot** display PDF images inline — ALWAYS convert to SVG
-2. Use SVG (vector format) for crisp rendering: `pdf2svg input.pdf output.svg`
-3. **NEVER use PNG for diagrams** — PNG is raster and looks blurry
-4. Verify SVG files contain valid XML/SVG markup
-5. Copy SVGs to `docs/Figures/LectureX/` via `sync_to_docs.sh`
-6. **Freshness check:** Before using any TikZ SVG, verify extract_tikz.tex matches current Beamer source
-
-## For R Scripts:
-1. Run `Rscript scripts/R/filename.R`
-2. Verify output files (PDF, RDS) were created with non-zero size
-3. Spot-check estimates for reasonable magnitude
+## For Stata Scripts (scripts/):
+1. Check that the .do file has no obvious syntax errors
+2. Verify globals/paths reference project directory structure
+3. Confirm log file open/close commands are present
+4. Verify output files (figures, tables) are directed to `output/figures/` or `output/tables/`
+5. If Stata is available, run: `stata-mp -b do scripts/filename.do`
+6. Check log file for errors
 
 ## Common Pitfalls:
-- **PDF images in HTML**: Browsers don't render PDFs inline → convert to SVG
-- **Relative paths**: `../Figures/` works from `Quarto/` but not from `docs/slides/` → use `sync_to_docs.sh`
+- **Bibliography not found in slides**: prez/ needs BIBINPUTS=../paper: to find bibliography.bib
+- **Preamble not found**: Both paper/ and prez/ need TEXINPUTS=../Preambles: for shared style files
 - **Assuming success**: Always verify output files exist AND contain correct content
-- **Stale TikZ SVGs**: extract_tikz.tex diverges from Beamer source → always diff-check
+- **Hardcoded paths in Stata**: All paths should use globals set in master.do
 
 ## Verification Checklist:
 ```
 [ ] Output file created successfully
-[ ] No compilation/render errors
-[ ] Images/figures display correctly
-[ ] Paths resolve in deployment location (docs/)
-[ ] Opened in browser/viewer to confirm visual appearance
+[ ] No compilation/execution errors
+[ ] Figures/tables display correctly
+[ ] All references and citations resolve
+[ ] Opened in viewer to confirm visual appearance
 [ ] Reported results to user
 ```

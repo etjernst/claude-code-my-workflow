@@ -1,7 +1,7 @@
 ---
 paths:
-  - "scripts/**/*.R"
-  - "Figures/**/*.R"
+  - "scripts/**/*.do"
+  - "output/**"
 ---
 
 # Replication-First Protocol
@@ -12,10 +12,10 @@ paths:
 
 ## Phase 1: Inventory & Baseline
 
-Before writing any R code:
+Before writing any analysis code:
 
 - [ ] Read the paper's replication README
-- [ ] Inventory replication package: language, data files, scripts, outputs
+- [ ] Inventory replication package: data files, scripts, outputs
 - [ ] Record gold standard numbers from the paper:
 
 ```markdown
@@ -26,27 +26,27 @@ Before writing any R code:
 | Main ATT | Table 2, Col 3 | -1.632 | (0.584) | Primary specification |
 ```
 
-- [ ] Store targets in `quality_reports/LectureNN_replication_targets.md` or as RDS
+- [ ] Store targets in `quality_reports/replication_targets.md`
 
 ---
 
 ## Phase 2: Translate & Execute
 
-- [ ] Follow `r-code-conventions.md` for all R coding standards
 - [ ] Translate line-by-line initially -- don't "improve" during replication
 - [ ] Match original specification exactly (covariates, sample, clustering, SE computation)
-- [ ] Save all intermediate results as RDS
+- [ ] Save all intermediate results
 
-### Stata to R Translation Pitfalls
+### Stata Conventions
 
-<!-- Customize: Add pitfalls specific to your field -->
-
-| Stata | R | Trap |
-|-------|---|------|
-| `reg y x, cluster(id)` | `feols(y ~ x, cluster = ~id)` | Stata clusters df-adjust differently from some R packages |
-| `areg y x, absorb(id)` | `feols(y ~ x \| id)` | Check demeaning method matches |
-| `probit` for PS | `glm(family=binomial(link="probit"))` | R default logit != Stata default in some commands |
-| `bootstrap, reps(999)` | Depends on method | Match seed, reps, and bootstrap type exactly |
+| Convention | Example | Notes |
+|-----------|---------|-------|
+| Globals for paths | `global root "..."` | Set in master.do, never hardcode |
+| Log files | `log using "$logs/analysis.log", replace` | Always log |
+| Variable labels | `label var earnings "Annual earnings (USD)"` | Label all key vars |
+| Output export | `graph export "$figures/fig1.pdf", replace` | Always to output/ |
+| Clustering | `reg y x, cluster(id)` | Document clustering level |
+| Fixed effects | `reghdfe y x, absorb(id year)` | Specify all FE |
+| Bootstrap | `bootstrap, reps(999) seed(12345)` | Always set seed |
 
 ---
 
@@ -68,13 +68,12 @@ Before writing any R code:
 
 ### Replication Report
 
-Save to `quality_reports/LectureNN_replication_report.md`:
+Save to `quality_reports/replication_report.md`:
 
 ```markdown
 # Replication Report: [Paper Author (Year)]
 **Date:** [YYYY-MM-DD]
-**Original language:** [Stata/R/etc.]
-**R translation:** [script path]
+**Scripts:** [script paths]
 
 ## Summary
 - **Targets checked / Passed / Failed:** N / M / K
@@ -89,7 +88,7 @@ Save to `quality_reports/LectureNN_replication_report.md`:
 - **Target:** X | **Investigation:** ... | **Resolution:** ...
 
 ## Environment
-- R version, key packages (with versions), data source
+- Stata version, key packages (with versions), data source
 ```
 
 ---
@@ -99,5 +98,5 @@ Save to `quality_reports/LectureNN_replication_report.md`:
 After replication is verified (all targets PASS):
 
 - [ ] Commit replication script: "Replicate [Paper] Table X -- all targets match"
-- [ ] Now extend with course-specific modifications (different estimators, new figures, etc.)
+- [ ] Now extend with project-specific modifications (different estimators, new figures, etc.)
 - [ ] Each extension builds on the verified baseline

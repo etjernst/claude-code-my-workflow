@@ -1,0 +1,56 @@
+\documentclass[12pt]{article}
+
+\usepackage{fontspec}
+\usepackage{amsmath,amssymb}
+\usepackage{natbib}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{setspace}
+\onehalfspacing
+
+\title{Selection and Heterogeneity in the Returns to Migration}
+\author{Eduardo Cenci \and Marieke Kleemans \and Emilia Tjernstr\"{o}m}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This paper investigates selection and heterogeneity in the returns to migration. We examine how migrants differ from non-migrants along observable and unobservable dimensions, and how these differences shape the distribution of returns to migration across individuals.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Migration transforms the economic prospects of millions of individuals each year. Understanding who migrates, why they migrate, and what they gain from migration remains central to labor economics and development economics. This paper contributes to this literature by examining the heterogeneity in returns to migration and the selection patterns that generate it.
+
+A large body of work documents positive average returns to migration \citep{Imbens2004_nonparametric}. Migrants tend to earn more than observationally similar non-migrants, even after accounting for selection on observable characteristics. The magnitude of these gains varies across contexts, but the direction remains remarkably consistent.
+
+Average returns, however, mask substantial heterogeneity. Some migrants gain considerably from relocation while others gain little or even lose relative to their counterfactual earnings at origin. Understanding this heterogeneity requires moving beyond average treatment effects to characterize the full distribution of individual-level returns.
+
+\section{Conceptual Framework}
+\label{sec:framework}
+
+Consider an individual $i$ who chooses between staying at origin ($D_i = 0$) and migrating ($D_i = 1$). Let $Y_i(1)$ denote potential earnings if individual $i$ migrates, and $Y_i(0)$ denote potential earnings if individual $i$ stays. The individual return to migration equals:
+\begin{equation}
+\label{eq:return}
+\Delta_i = Y_i(1) - Y_i(0)
+\end{equation}
+The fundamental problem of causal inference prevents observing both potential outcomes for any individual. We observe $Y_i = D_i Y_i(1) + (1 - D_i) Y_i(0)$.
+
+Selection into migration depends on both potential outcomes. Following \citet{Angrist2009_mostly_harmless}, individuals migrate when the expected gain exceeds migration costs $c_i$:
+\begin{equation}
+\label{eq:selection}
+D_i = \mathbf{1}\left[ E_i[\Delta_i] > c_i \right]
+\end{equation}
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper examines selection and heterogeneity in the returns to migration. We develop methods to characterize the distribution of individual returns and the selection patterns that shape observed migration flows.
+
+\bibliographystyle{plainnat}
+\bibliography{bibliography}
+
+\end{document}
