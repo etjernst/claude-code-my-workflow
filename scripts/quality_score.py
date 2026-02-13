@@ -6,10 +6,10 @@ Calculates objective quality scores (0-100) based on defined rubrics.
 Enforces quality gates: 80 (commit), 90 (PR), 95 (excellence).
 
 Usage:
-    python scripts/quality_score.py Slides/Lecture01_Topic.tex
+    python scripts/quality_score.py slides/Lecture01_Topic.tex
     python scripts/quality_score.py scripts/python/analysis.py
     python scripts/quality_score.py stata/analysis.do
-    python scripts/quality_score.py Slides/*.tex --summary
+    python scripts/quality_score.py slides/*.tex --summary
 """
 
 import sys
@@ -617,7 +617,7 @@ def main():
         epilog="""
 Examples:
   # Score a Beamer/LaTeX file
-  python scripts/quality_score.py Slides/Lecture01_Topic.tex
+  python scripts/quality_score.py slides/Lecture01_Topic.tex
 
   # Score a Python script
   python scripts/quality_score.py scripts/python/analysis.py
@@ -626,10 +626,10 @@ Examples:
   python scripts/quality_score.py stata/analysis.do
 
   # Score multiple files
-  python scripts/quality_score.py Slides/*.tex
+  python scripts/quality_score.py slides/*.tex
 
   # Summary only (no detailed issues)
-  python scripts/quality_score.py Slides/Lecture01.tex --summary
+  python scripts/quality_score.py slides/Lecture01.tex --summary
 
   # Verbose output (include minor issues)
   python scripts/quality_score.py scripts/python/analysis.py --verbose

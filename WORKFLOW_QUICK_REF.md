@@ -45,7 +45,7 @@
 
 ```bash
 # Compile slides
-cd Slides && xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
+cd slides && xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
 
 # Run Python analysis
 python scripts/python/analysis.py

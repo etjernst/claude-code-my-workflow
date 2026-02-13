@@ -1,6 +1,6 @@
 ---
 paths:
-  - "Slides/**/*.tex"
+  - "slides/**/*.tex"
   - "scripts/**/*.py"
   - "stata/**/*.do"
 ---

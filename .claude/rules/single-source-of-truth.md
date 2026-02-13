@@ -1,7 +1,7 @@
 ---
 paths:
-  - "Figures/**/*"
-  - "Slides/**/*.tex"
+  - "figures/**/*"
+  - "slides/**/*.tex"
 ---
 
 # Single Source of Truth: Enforcement Protocol
@@ -14,7 +14,7 @@ paths:
 Beamer .tex (SOURCE OF TRUTH for slides)
   ├── extract_tikz.tex → PDF → SVGs (derived)
   ├── Bibliography_base.bib (shared)
-  └── Figures/ (shared assets)
+  └── figures/ (shared assets)
 
 Analysis scripts (SOURCE OF TRUTH for results)
   ├── scripts/python/*.py → output/figures/, output/tables/
@@ -34,7 +34,7 @@ ALWAYS propagate changes from source → derived.
 ### Diff-Check Procedure
 
 1. Read the TikZ block from the Beamer `.tex` file
-2. Read the corresponding block from `Figures/LectureN/extract_tikz.tex`
+2. Read the corresponding block from `figures/LectureN/extract_tikz.tex`
 3. Compare EVERY coordinate, label, color, opacity, and anchor point
 4. If ANY difference exists: update `extract_tikz.tex` from Beamer, recompile, regenerate SVGs
 

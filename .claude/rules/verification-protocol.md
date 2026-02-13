@@ -1,6 +1,6 @@
 ---
 paths:
-  - "Slides/**/*.tex"
+  - "slides/**/*.tex"
   - "scripts/**/*.py"
   - "stata/**/*.do"
 ---
@@ -11,7 +11,7 @@ paths:
 
 ## For LaTeX/Beamer Slides:
 1. Compile with xelatex (MikTeX `--include-directory` syntax) and check for errors
-2. Open the PDF to verify figures render: `start Slides/FILENAME.pdf`
+2. Open the PDF to verify figures render: `start slides/FILENAME.pdf`
 3. Check for overfull hbox warnings
 
 ## For Python Scripts:

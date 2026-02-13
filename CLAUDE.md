@@ -29,9 +29,9 @@
 ├── CLAUDE.MD                    # This file
 ├── .claude/                     # Rules, skills, agents, hooks
 ├── Bibliography_base.bib        # Centralized bibliography
-├── Figures/                     # Figures and images
-├── Preambles/header.tex         # LaTeX headers
-├── Slides/                      # Beamer .tex files
+├── figures/                     # Figures and images
+├── preambles/header.tex         # LaTeX headers
+├── slides/                      # Beamer .tex files
 ├── data/                        # Data files
 │   ├── raw/                     # Original data (never modify)
 │   └── processed/               # Cleaned/transformed data
@@ -56,11 +56,11 @@
 
 ```bash
 # LaTeX (3-pass, XeLaTeX only — MikTeX on Windows)
-cd Slides
-xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
+cd slides
+xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
 bibtex --include-directory=.. file
-xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
-xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
+xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
+xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
 
 # Stata
 stata-mp -b do stata/analysis.do
@@ -69,7 +69,7 @@ stata-mp -b do stata/analysis.do
 python scripts/python/analysis.py
 
 # Quality score
-python scripts/quality_score.py Slides/file.tex
+python scripts/quality_score.py slides/file.tex
 python scripts/quality_score.py scripts/python/file.py
 python scripts/quality_score.py stata/file.do
 ```
@@ -133,6 +133,6 @@ python scripts/quality_score.py stata/file.do
 | Component | File | Status | Key Content |
 |-----------|------|--------|-------------|
 | Paper | `paper.tex` | -- | [Brief description] |
-| Slides | `Slides/Lecture01_Topic.tex` | -- | [Brief description] |
+| Slides | `slides/Lecture01_Topic.tex` | -- | [Brief description] |
 | Analysis | `scripts/python/analysis.py` | -- | [Brief description] |
 | Stata | `stata/analysis.do` | -- | [Brief description] |

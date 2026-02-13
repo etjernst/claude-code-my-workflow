@@ -12,14 +12,14 @@ Compile a Beamer slide deck using XeLaTeX with full citation resolution (MikTeX 
 
 ## Steps
 
-1. **Navigate to Slides/ directory** and compile with 3-pass sequence:
+1. **Navigate to slides/ directory** and compile with 3-pass sequence:
 
 ```bash
-cd Slides
-xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
+cd slides
+xelatex --include-directory=../preambles -interaction=nonstopmode $ARGUMENTS.tex
 bibtex --include-directory=.. $ARGUMENTS
-xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
-xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
+xelatex --include-directory=../preambles -interaction=nonstopmode $ARGUMENTS.tex
+xelatex --include-directory=../preambles -interaction=nonstopmode $ARGUMENTS.tex
 ```
 
 2. **Check for warnings:**
@@ -29,7 +29,7 @@ xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
 
 3. **Open the PDF** for visual verification:
    ```bash
-   start Slides/$ARGUMENTS.pdf
+   start slides/$ARGUMENTS.pdf
    ```
 
 4. **Report results:**
@@ -46,5 +46,5 @@ xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
 
 ## Important
 - **Always use XeLaTeX**, never pdflatex
-- **`--include-directory`** is required (MikTeX syntax): your Beamer theme lives in `Preambles/`
+- **`--include-directory`** is required (MikTeX syntax): your Beamer theme lives in `preambles/`
 - **bibtex `--include-directory`** is required: your `.bib` file lives in the repo root

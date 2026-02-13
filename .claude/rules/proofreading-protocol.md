@@ -1,6 +1,6 @@
 ---
 paths:
-  - "Slides/**/*.tex"
+  - "slides/**/*.tex"
   - "quality_reports/**"
 ---
 

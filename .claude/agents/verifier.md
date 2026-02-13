@@ -46,7 +46,7 @@ stata-mp -b do stata/FILENAME.do 2>&1
 ### TikZ Freshness Check (MANDATORY):
 **Before verifying any file that references TikZ SVGs:**
 1. Read the Beamer `.tex` file -- extract all `\begin{tikzpicture}` blocks
-2. Read `Figures/LectureN/extract_tikz.tex` -- extract all tikzpicture blocks
+2. Read `figures/LectureN/extract_tikz.tex` -- extract all tikzpicture blocks
 3. Compare each block
 4. Report: `FRESH` or `STALE -- N diagrams differ`
 
