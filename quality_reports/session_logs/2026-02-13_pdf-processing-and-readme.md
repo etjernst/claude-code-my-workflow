@@ -1,10 +1,10 @@
-# Session Log: 2026-02-13 -- PDF Processing & README Rewrite
+# Session Log: 2026-02-13 -- PDF Processing, README & Legacy Cleanup
 
 **Status:** COMPLETED
 
 ## Objective
 
-Test PDF processing efficiency, rewrite the pdf-processing rule based on findings, and update the out-of-date README to reflect the Stata+Python+LaTeX workflow.
+Test PDF processing efficiency, rewrite the pdf-processing rule based on findings, update the out-of-date README, and eliminate all remaining R/Quarto/Beamer legacy references from the repo.
 
 ## Changes Made
 
@@ -15,6 +15,8 @@ Test PDF processing efficiency, rewrite the pdf-processing rule based on finding
 | `.claude/rules/pdf-processing.md` | Rewritten (61 -> 44 lines) | Replaced Ghostscript splitting pipeline with PyPDF2 text extraction + Read tool visual fallback |
 | `README.md` | Rewritten (230 -> 208 lines) | Updated from R+Quarto+Beamer to Stata+Python+LaTeX; fixed agent/skill/rule counts; removed dead links |
 | `MEMORY.md` | Added [LEARN:pdf] entry | Document parallel tool cascading failure and pages parameter requirement |
+| `guide/workflow-guide.qmd` | Rewritten (1163 -> 624 lines) | Removed all R/Quarto/Beamer legacy; updated agents/skills/rules to match actual repo |
+| `README.md` | Fixed verification-protocol trigger | Changed `.tex`, `.qmd`, `docs/` to `.tex`, `*.py`, `*.do` |
 
 ## Design Decisions
 
@@ -51,7 +53,20 @@ Reading a PDF without the `pages` parameter caused a cascading failure: the PDF 
 - [x] No references to R, Quarto, or macOS-only tools
 - [x] No dead links (removed psantanna.com live site reference)
 
+### Legacy Cleanup Sweep
+
+Thorough grep sweep for R, Quarto, macOS, old path patterns, and removed agent/skill names:
+
+| Area | Result |
+|------|--------|
+| `.claude/rules/` (all 17 files) | Clean -- no legacy references |
+| `.claude/agents/` (all 8 files) | Clean |
+| `.claude/skills/` (all 17 files) | Clean |
+| `README.md` | Fixed one wrong trigger entry for verification-protocol |
+| `guide/workflow-guide.qmd` | Massively out of date -- complete rewrite |
+| Session logs | Historical references only (correct, left unchanged) |
+
 ## Open Questions
 
-- The `guide/` directory still has `workflow-guide.qmd` and related files from the original author. These may need updating or removal in a future session.
-- The `verification-protocol` rule still references `.qmd` and `docs/` in its path triggers -- may want to review whether those paths are still relevant.
+- The untracked PDF (`MQBS Salary Loading Scheme and Guidelines (Feb. 2024).pdf`) is still in the repo root. Move to `master_supporting_docs/` or leave untracked.
+- The `guide/` directory still uses `.qmd` format -- may want to convert to plain `.md` or HTML in a future session since Quarto is no longer in the toolchain.
