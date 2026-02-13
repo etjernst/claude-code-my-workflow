@@ -3,58 +3,48 @@ paths:
   - "master_supporting_docs/**"
 ---
 
-# Robust PDF Processing
+# PDF Processing
 
-## The Safe Processing Workflow
+## Default: PyPDF2 Text Extraction
 
-**Step 1: Receive PDF Upload**
-- User uploads PDF to `master_supporting_docs/supporting_papers/` or `supporting_slides/`
-- Claude DOES NOT attempt to read it directly
+For text-heavy documents (papers, guidelines, syllabi), extract text with PyPDF2 — already installed in Anaconda. This is fast (~1s for 50 pages) and context-efficient (~30K tokens vs. massive image tokens).
 
-**Step 2: Check PDF Properties**
-```bash
-pdfinfo paper_name.pdf | grep "Pages:"
-ls -lh paper_name.pdf
+```python
+import PyPDF2
+reader = PyPDF2.PdfReader(r'path\to\paper.pdf')
+print(f'Pages: {len(reader.pages)}')
+for i, page in enumerate(reader.pages):
+    print(f'\n--- Page {i+1} ---')
+    print(page.extract_text())
 ```
 
-**Step 3: Create Subfolder and Split**
-```bash
-mkdir -p paper_name/
+For large PDFs, extract to a text file first, then read the text file:
 
-for i in {0..9}; do
-  start=$((i*5 + 1))
-  end=$(((i+1)*5))
-  gs -sDEVICE=pdfwrite -dNOPAUSE -dBATCH -dSAFER \
-     -dFirstPage=$start -dLastPage=$end \
-     -sOutputFile="paper_name/paper_name_p$(printf '%03d' $start)-$(printf '%03d' $end).pdf" \
-     paper_name.pdf 2>/dev/null
-done
+```python
+import PyPDF2
+reader = PyPDF2.PdfReader(r'path\to\paper.pdf')
+with open(r'path\to\paper_text.txt', 'w', encoding='utf-8') as f:
+    for i, page in enumerate(reader.pages):
+        f.write(f'\n--- Page {i+1} ---\n')
+        f.write(page.extract_text())
 ```
 
-**Step 4: Process Chunks Intelligently**
-- Read chunks ONE AT A TIME using the Read tool
-- Extract key information from each chunk
-- Build understanding progressively
-- Don't try to hold all chunks in working memory
+## Complement: Read Tool for Visual Inspection
 
-**Step 5: Selective Deep Reading**
-- After scanning all chunks, identify the most relevant sections
-- Only read those sections in detail for slide development
-- Skip appendices, references, or less relevant sections unless needed
+Use the Read tool with `pages` parameter only when you need to see layout, figures, charts, or tables that don't extract well as text. Always specify `pages` — bare reads fail on PDFs over 10 pages.
 
-## Error Handling Protocol
+```
+Read tool: pages "1-5"   (TOC pass)
+Read tool: pages "12-15" (specific figures)
+```
 
-**If a chunk fails to process:**
-1. Note the problematic chunk (e.g., "Chunk p021-025 failed")
-2. Try splitting into 1-2 page pieces
-3. If still failing, skip and document the gap
+**Max 20 pages per Read call.** For longer ranges, split into parallel batches.
 
-**If splitting fails:**
-1. Check if Ghostscript is installed: `gs --version`
-2. Try alternative: `pdftk paper.pdf burst output paper_%03d.pdf`
-3. If all else fails, ask user to upload specific page ranges manually
+## Processing Strategy
 
-**If memory/token issues persist:**
-1. Process only 2-3 chunks per session
-2. Focus on specific sections user identifies as most important
+1. **Get page count** — run PyPDF2 `len(reader.pages)`
+2. **Extract full text** — dump to `.txt` file via Python script
+3. **Read the text file** — use Read tool on the extracted text
+4. **Visual spot-check** — use Read tool with `pages` only if tables/figures need visual inspection
+5. **Clean up** — delete extracted text file when done
 

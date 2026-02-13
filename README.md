@@ -1,10 +1,8 @@
 # My Claude Code Setup
 
-> **Work in progress.** This is not meant to be a polished guide for everyone. It's mostly a summary of how I've been using Claude Code for academic work — creating lecture slides, writing R scripts, managing Beamer-to-Quarto workflows, and so on. I keep learning new things, and as I do, I keep updating these files. This is just a way for me to share what I've figured out with friends and colleagues.
+> **Work in progress.** This is how I use Claude Code for academic work — creating lecture slides, running Stata and Python analyses, and managing LaTeX/Beamer workflows. I keep updating these files as I learn. Sharing with friends and colleagues.
 
-**Live site:** [psantanna.com/claude-code-my-workflow](https://psantanna.com/claude-code-my-workflow/)
-
-A ready-to-fork starter kit for academics using [Claude Code](https://code.claude.com/docs/en/overview) with **LaTeX/Beamer + R + Quarto**. You describe what you want; Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results — like a contractor who handles the entire job. Extracted from a production PhD course (6 lectures, 800+ slides).
+A ready-to-fork starter kit for academics using [Claude Code](https://code.claude.com/docs/en/overview) with **LaTeX/Beamer + Stata + Python**. You describe what you want; Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results — like a contractor who handles the entire job.
 
 ---
 
@@ -13,12 +11,10 @@ A ready-to-fork starter kit for academics using [Claude Code](https://code.claud
 ### 1. Fork & Clone
 
 ```bash
-# Fork this repo on GitHub (click "Fork" on the repo page), then:
+# Fork this repo on GitHub, then:
 git clone https://github.com/YOUR_USERNAME/claude-code-my-workflow.git my-project
 cd my-project
 ```
-
-Replace `YOUR_USERNAME` with your GitHub username.
 
 ### 2. Start Claude Code and Paste This Prompt
 
@@ -26,23 +22,21 @@ Replace `YOUR_USERNAME` with your GitHub username.
 claude
 ```
 
-**Using VS Code?** Open the Claude Code panel instead. Everything works the same — see the [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-setup) for details.
+**Using VS Code?** Open the Claude Code panel instead.
 
 Then paste the following, filling in your project details:
 
-> I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2–3 sentences — what you're building, who it's for, what tools you use.]**
+> I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2-3 sentences -- what you're building, who it's for, what tools you use.]**
 >
 > I want our collaboration to be structured, precise, and rigorous. When creating visuals, everything must be polished and publication-ready.
 >
-> I've set up the Claude Code academic workflow (forked from `pedrohcgs/claude-code-my-workflow`). The configuration files are already in this repo. Please read them, understand the workflow, and then **update all configuration files to fit my project** — fill in placeholders in `CLAUDE.md`, adjust rules if needed, and propose any customizations specific to my use case.
+> I've set up the Claude Code academic workflow (forked from `pedrohcgs/claude-code-my-workflow`). The configuration files are already in this repo. Please read them, understand the workflow, and then **update all configuration files to fit my project** -- fill in placeholders in `CLAUDE.md`, adjust rules if needed, and propose any customizations specific to my use case.
 >
-> After that, use the plan-first workflow for all non-trivial tasks. Once I approve a plan, switch to contractor mode — coordinate everything autonomously and only come back to me when there's ambiguity or a decision to make.
+> After that, use the plan-first workflow for all non-trivial tasks. Once I approve a plan, switch to contractor mode -- coordinate everything autonomously and only come back to me when there's ambiguity or a decision to make.
 >
 > Enter plan mode and start by adapting the workflow configuration for this project.
 
-**What this does:** Claude reads all the configuration files, fills in your project name, institution, and preferences, then enters contractor mode — planning, implementing, reviewing, and verifying autonomously. You approve the plan and Claude handles the rest.
-
-**Prefer to configure manually?** See the [full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html#sec-setup) for step-by-step manual setup instructions.
+**What this does:** Claude reads all the configuration files, fills in your project name, institution, and preferences, then enters contractor mode. You approve the plan and Claude handles the rest.
 
 ---
 
@@ -50,51 +44,34 @@ Then paste the following, filling in your project details:
 
 ### Contractor Mode
 
-You describe a task. Claude plans the approach, implements it, runs specialized review agents, fixes issues, re-verifies, and scores against quality gates — all autonomously. You see a summary when the work meets quality standards. Say "just do it" and it auto-commits too.
+You describe a task. Claude plans the approach, implements it, runs specialized review agents, fixes issues, re-verifies, and scores against quality gates -- all autonomously. You see a summary when the work meets quality standards. Say "just do it" and it auto-commits too.
 
 ### Specialized Agents
 
-Instead of one general-purpose reviewer, 10 focused agents each check one dimension:
+Instead of one general-purpose reviewer, 8 focused agents each check one dimension:
 
-- **proofreader** — grammar/typos
-- **slide-auditor** — visual layout
-- **pedagogy-reviewer** — teaching quality
-- **r-reviewer** — R code quality
-- **domain-reviewer** — field-specific correctness (template — customize for your field)
+- **proofreader** -- grammar/typos
+- **slide-auditor** -- visual layout
+- **pedagogy-reviewer** -- teaching quality
+- **python-reviewer** -- Python code quality
+- **stata-reviewer** -- Stata .do file quality
+- **domain-reviewer** -- field-specific correctness (template -- customize for your field)
 
 Each is better at its narrow task than a generalist would be. The `/slide-excellence` skill runs them all in parallel.
 
-### Adversarial QA
-
-Two agents work in opposition: the **critic** reads both Beamer and Quarto and produces harsh findings. The **fixer** implements exactly what the critic found. They loop until the critic says "APPROVED" (or 5 rounds max). This catches errors that single-pass review misses.
-
 ### Quality Gates
 
-Every file gets a score (0–100). Scores below threshold block the action:
-- **80** — commit threshold
-- **90** — PR threshold
-- **95** — excellence (aspirational)
-
----
-
-## The Guide
-
-For a comprehensive walkthrough, read the **[full guide](https://psantanna.com/claude-code-my-workflow/workflow-guide.html)** (or see the [source](guide/workflow-guide.qmd)).
-
-It covers:
-1. **Why This Workflow Exists** — the problem and the vision
-2. **Getting Started** — fork, paste one prompt, and Claude sets up the rest
-3. **The System in Action** — specialized agents, adversarial QA, quality scoring
-4. **The Building Blocks** — CLAUDE.md, rules, skills, agents, hooks, memory
-5. **Workflow Patterns** — lecture creation, translation, replication, multi-agent review, research exploration
-6. **Customizing for Your Domain** — creating your own reviewers and knowledge bases
+Every file gets a score (0-100). Scores below threshold block the action:
+- **80** -- commit threshold
+- **90** -- PR threshold
+- **95** -- excellence (aspirational)
 
 ---
 
 ## What's Included
 
 <details>
-<summary><strong>10 agents, 19 skills, 17 rules, 4 hooks</strong> (click to expand)</summary>
+<summary><strong>8 agents, 17 skills, 17 rules, 4 hooks</strong> (click to expand)</summary>
 
 ### Agents (`.claude/agents/`)
 
@@ -102,12 +79,10 @@ It covers:
 |-------|-------------|
 | `proofreader` | Grammar, typos, overflow, consistency review |
 | `slide-auditor` | Visual layout audit (overflow, font consistency, spacing) |
-| `pedagogy-reviewer` | 13-pattern pedagogical review (narrative arc, notation density, pacing) |
-| `r-reviewer` | R code quality, reproducibility, and domain correctness |
-| `tikz-reviewer` | Merciless TikZ diagram visual critique |
-| `beamer-translator` | Beamer-to-Quarto translation specialist |
-| `quarto-critic` | Adversarial QA comparing Quarto against Beamer benchmark |
-| `quarto-fixer` | Implements fixes from the critic agent |
+| `pedagogy-reviewer` | Pedagogical review (narrative arc, notation density, pacing) |
+| `python-reviewer` | Python code quality, reproducibility, and domain correctness |
+| `stata-reviewer` | Stata .do file quality, reproducibility, and conventions |
+| `tikz-reviewer` | TikZ diagram visual critique |
 | `verifier` | End-to-end task completion verification |
 | `domain-reviewer` | **Template** for your field-specific substance reviewer |
 
@@ -115,16 +90,14 @@ It covers:
 
 | Skill | What It Does |
 |-------|-------------|
-| `/compile-latex` | 3-pass XeLaTeX compilation with bibtex |
-| `/deploy` | Render Quarto + sync to GitHub Pages |
+| `/compile-latex` | 3-pass XeLaTeX compilation with bibtex (MikTeX) |
 | `/extract-tikz` | TikZ diagrams to PDF to SVG pipeline |
 | `/proofread` | Launch proofreader on a file |
 | `/visual-audit` | Launch slide-auditor on a file |
 | `/pedagogy-review` | Launch pedagogy-reviewer on a file |
-| `/review-r` | Launch R code reviewer |
-| `/qa-quarto` | Adversarial critic-fixer loop (max 5 rounds) |
+| `/review-python` | Launch Python code reviewer |
+| `/review-stata` | Launch Stata .do file reviewer |
 | `/slide-excellence` | Combined multi-agent review |
-| `/translate-to-quarto` | Full 11-phase Beamer-to-Quarto translation |
 | `/validate-bib` | Cross-reference citations against bibliography |
 | `/devils-advocate` | Challenge design decisions before committing |
 | `/create-lecture` | Full lecture creation workflow |
@@ -133,7 +106,7 @@ It covers:
 | `/research-ideation` | Generate research questions and empirical strategies |
 | `/interview-me` | Interactive interview to formalize a research idea |
 | `/review-paper` | Manuscript review: structure, econometrics, referee objections |
-| `/data-analysis` | End-to-end R analysis with publication-ready output |
+| `/data-analysis` | End-to-end Python/Stata analysis with publication-ready output |
 
 ### Research Workflow
 
@@ -141,7 +114,7 @@ It covers:
 |---------|-------------|
 | Exploration folder | Structured `explorations/` sandbox with graduate/archive lifecycle |
 | Fast-track workflow | 60/100 quality threshold for rapid prototyping |
-| Simplified orchestrator | implement → verify → score → done (no multi-round reviews) |
+| Simplified orchestrator | implement, verify, score, done (no multi-round reviews) |
 | Enhanced session logging | Structured tables for changes, decisions, verification |
 | Merge-only reporting | Quality reports at merge time only |
 | Math line-length exception | Long lines acceptable for documented formulas |
@@ -149,14 +122,14 @@ It covers:
 
 ### Rules (`.claude/rules/`)
 
-Rules use path-scoped loading: **always-on** rules load every session (~100 lines total); **path-scoped** rules load only when Claude works on matching files. Claude follows ~150 instructions reliably, so less is more.
+Rules use path-scoped loading: **always-on** rules load every session (~100 lines total); **path-scoped** rules load only when Claude works on matching files.
 
-**Always-on** (no `paths:` frontmatter — load every session):
+**Always-on** (no `paths:` frontmatter -- load every session):
 
 | Rule | What It Enforces |
 |------|-----------------|
 | `plan-first-workflow` | Plan mode for non-trivial tasks + context preservation |
-| `orchestrator-protocol` | Contractor mode: implement → verify → review → fix → score |
+| `orchestrator-protocol` | Contractor mode: implement, verify, review, fix, score |
 | `session-logging` | Three logging triggers: post-plan, incremental, end-of-session |
 
 **Path-scoped** (load only when working on matching files):
@@ -164,21 +137,30 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 | Rule | Triggers On | What It Enforces |
 |------|------------|-----------------|
 | `verification-protocol` | `.tex`, `.qmd`, `docs/` | Task completion checklist |
-| `single-source-of-truth` | `Figures/`, `.tex`, `.qmd` | No content duplication; Beamer is authoritative |
-| `quality-gates` | `.tex`, `.qmd`, `*.R` | 80/90/95 scoring + tolerance thresholds |
-| `r-code-conventions` | `*.R` | R coding standards + math line-length exception |
+| `single-source-of-truth` | `figures/`, `.tex` | No content duplication; Beamer is authoritative |
+| `quality-gates` | `.tex`, `*.py`, `*.do` | 80/90/95 scoring + tolerance thresholds |
+| `python-code-conventions` | `*.py` | Python coding standards |
+| `stata-code-conventions` | `*.do` | Stata coding standards |
 | `tikz-visual-quality` | `.tex` | TikZ diagram visual standards |
-| `beamer-quarto-sync` | `.tex`, `.qmd` | Auto-sync Beamer edits to Quarto |
-| `pdf-processing` | `master_supporting_docs/` | Safe large PDF handling |
-| `proofreading-protocol` | `.tex`, `.qmd`, `quality_reports/` | Propose-first, then apply with approval |
+| `pdf-processing` | `master_supporting_docs/` | PyPDF2 text extraction + Read tool visual fallback |
+| `proofreading-protocol` | `.tex`, `quality_reports/` | Propose-first, then apply with approval |
 | `no-pause-beamer` | `.tex` | No overlay commands in Beamer |
-| `replication-protocol` | `*.R` | Replicate original results before extending |
-| `knowledge-base-template` | `.tex`, `.qmd`, `*.R` | Notation/application registry template |
-| `orchestrator-research` | `*.R`, `explorations/` | Simple orchestrator for research (no multi-round reviews) |
+| `replication-protocol` | `*.py`, `*.do` | Replicate original results before extending |
+| `knowledge-base-template` | `.tex`, `*.py`, `*.do` | Notation/application registry template |
+| `orchestrator-research` | `*.py`, `*.do`, `explorations/` | Simple orchestrator for research |
 | `exploration-folder-protocol` | `explorations/` | Structured sandbox for experimental work |
 | `exploration-fast-track` | `explorations/` | Lightweight exploration workflow (60/100 threshold) |
 
-**Templates** (`templates/`) — reference formats for session logs, quality reports, and exploration READMEs. Not auto-loaded.
+**Templates** (`templates/`) -- reference formats for session logs, quality reports, and exploration READMEs. Not auto-loaded.
+
+### Hooks (`.claude/settings.json`)
+
+| Hook | Type | What It Does |
+|------|------|-------------|
+| `notify.sh` | Notification | Toast notification when Claude needs attention |
+| `protect-files.sh` | PreToolUse | Blocks edits to protected files (raw data, configs) |
+| `pre-compact.sh` | PreCompact | Saves context to disk before auto-compression |
+| `log-reminder.py` | Stop | Reminds to create session log if none exists |
 
 </details>
 
@@ -189,13 +171,12 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 | Tool | Required For | Install |
 |------|-------------|---------|
 | [Claude Code](https://code.claude.com/docs/en/overview) | Everything | `npm install -g @anthropic-ai/claude-code` |
-| XeLaTeX | LaTeX compilation | [TeX Live](https://tug.org/texlive/) or [MacTeX](https://tug.org/mactex/) |
-| [Quarto](https://quarto.org) | Web slides | [quarto.org/docs/get-started](https://quarto.org/docs/get-started/) |
-| R | Figures & analysis | [r-project.org](https://www.r-project.org/) |
-| pdf2svg | TikZ to SVG | `brew install pdf2svg` (macOS) |
-| [gh CLI](https://cli.github.com/) | PR workflow | `brew install gh` (macOS) |
+| XeLaTeX | LaTeX compilation | [MikTeX](https://miktex.org/download) (Windows) or [TeX Live](https://tug.org/texlive/) |
+| [Stata](https://www.stata.com/) | Econometrics / data analysis | Licensed software |
+| [Python (Anaconda)](https://www.anaconda.com/) | Analysis scripts, PDF processing | [anaconda.com](https://www.anaconda.com/download) |
+| [gh CLI](https://cli.github.com/) | PR workflow | `winget install GitHub.cli` (Windows) |
 
-Not all tools are needed — install only what your project uses. Claude Code is the only hard requirement.
+Not all tools are needed -- install only what your project uses. Claude Code is the only hard requirement.
 
 ---
 
@@ -203,24 +184,22 @@ Not all tools are needed — install only what your project uses. Claude Code is
 
 1. **Fill in the knowledge base** (`.claude/rules/knowledge-base-template.md`) with your notation, applications, and design principles
 2. **Customize the domain reviewer** (`.claude/agents/domain-reviewer.md`) with review lenses specific to your field
-3. **Update the color palette** in your Quarto theme SCSS file — change the color variables at the top
-4. **Add field-specific R pitfalls** to `.claude/rules/r-code-conventions.md`
-5. **Fill in the lecture mapping** in `.claude/rules/beamer-quarto-sync.md`
-6. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
-7. **Set up the exploration folder** (`explorations/`) for experimental work
+3. **Add field-specific coding pitfalls** to `.claude/rules/python-code-conventions.md` or `.claude/rules/stata-code-conventions.md`
+4. **Customize the workflow quick reference** (`.claude/WORKFLOW_QUICK_REF.md`) with your non-negotiables and preferences
+5. **Set up the exploration folder** (`explorations/`) for experimental work
 
 ---
 
 ## Additional Resources
 
 - [Claude Code Documentation](https://code.claude.com/docs/en/overview)
-- [Writing a Good CLAUDE.md](https://code.claude.com/docs/en/memory) — official guidance on project memory
+- [Writing a Good CLAUDE.md](https://code.claude.com/docs/en/memory) -- official guidance on project memory
 
 ---
 
 ## Origin
 
-This infrastructure was extracted from **Econ 730: Causal Panel Data** at Emory University, developed by Pedro Sant'Anna using Claude Code over 6+ sessions. The course produced 6 complete PhD lecture decks with 800+ slides, interactive Quarto versions with plotly charts, and full R replication packages — all managed through this multi-agent workflow.
+This infrastructure was extracted from **Econ 730: Causal Panel Data** at Emory University, developed by Pedro Sant'Anna using Claude Code. The original project used R + Quarto + Beamer and produced 6 complete PhD lecture decks with 800+ slides. This fork has been adapted for a **Stata + Python + LaTeX/Beamer** workflow on Windows.
 
 ---
 
