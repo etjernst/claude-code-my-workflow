@@ -1,7 +1,7 @@
 ---
 paths:
-  - "scripts/**/*.R"
-  - "Figures/**/*.R"
+  - "scripts/**/*.py"
+  - "stata/**/*.do"
 ---
 
 # Replication-First Protocol
@@ -12,7 +12,7 @@ paths:
 
 ## Phase 1: Inventory & Baseline
 
-Before writing any R code:
+Before writing any code:
 
 - [ ] Read the paper's replication README
 - [ ] Inventory replication package: language, data files, scripts, outputs
@@ -26,26 +26,26 @@ Before writing any R code:
 | Main ATT | Table 2, Col 3 | -1.632 | (0.584) | Primary specification |
 ```
 
-- [ ] Store targets in `quality_reports/LectureNN_replication_targets.md` or as RDS
+- [ ] Store targets in `quality_reports/replication_targets.md` or as pickle/parquet
 
 ---
 
 ## Phase 2: Translate & Execute
 
-- [ ] Follow `r-code-conventions.md` for all R coding standards
+- [ ] Follow `python-code-conventions.md` or `stata-code-conventions.md` for coding standards
 - [ ] Translate line-by-line initially -- don't "improve" during replication
 - [ ] Match original specification exactly (covariates, sample, clustering, SE computation)
-- [ ] Save all intermediate results as RDS
+- [ ] Save all intermediate results (pickle/parquet for Python, .dta for Stata)
 
-### Stata to R Translation Pitfalls
+### Stata to Python Translation Pitfalls
 
 <!-- Customize: Add pitfalls specific to your field -->
 
-| Stata | R | Trap |
-|-------|---|------|
-| `reg y x, cluster(id)` | `feols(y ~ x, cluster = ~id)` | Stata clusters df-adjust differently from some R packages |
-| `areg y x, absorb(id)` | `feols(y ~ x \| id)` | Check demeaning method matches |
-| `probit` for PS | `glm(family=binomial(link="probit"))` | R default logit != Stata default in some commands |
+| Stata | Python | Trap |
+|-------|--------|------|
+| `reg y x, cluster(id)` | `smf.ols(); .fit(cov_type='cluster')` | Check df adjustment matches |
+| `areg y x, absorb(id)` | `linearmodels.PanelOLS` | Check demeaning method matches |
+| `probit` for PS | `statsmodels Probit` | Default link functions may differ |
 | `bootstrap, reps(999)` | Depends on method | Match seed, reps, and bootstrap type exactly |
 
 ---
@@ -68,13 +68,13 @@ Before writing any R code:
 
 ### Replication Report
 
-Save to `quality_reports/LectureNN_replication_report.md`:
+Save to `quality_reports/replication_report.md`:
 
 ```markdown
 # Replication Report: [Paper Author (Year)]
 **Date:** [YYYY-MM-DD]
 **Original language:** [Stata/R/etc.]
-**R translation:** [script path]
+**Translation:** [script path]
 
 ## Summary
 - **Targets checked / Passed / Failed:** N / M / K
@@ -89,7 +89,8 @@ Save to `quality_reports/LectureNN_replication_report.md`:
 - **Target:** X | **Investigation:** ... | **Resolution:** ...
 
 ## Environment
-- R version, key packages (with versions), data source
+- Python version, key packages (with versions), data source
+- OR: Stata version, ado packages, data source
 ```
 
 ---
@@ -99,5 +100,5 @@ Save to `quality_reports/LectureNN_replication_report.md`:
 After replication is verified (all targets PASS):
 
 - [ ] Commit replication script: "Replicate [Paper] Table X -- all targets match"
-- [ ] Now extend with course-specific modifications (different estimators, new figures, etc.)
+- [ ] Now extend with project-specific modifications (different estimators, new figures, etc.)
 - [ ] Each extension builds on the verified baseline

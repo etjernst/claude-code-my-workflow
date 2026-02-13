@@ -1,7 +1,7 @@
 # CLAUDE.MD -- Academic Project Development with Claude Code
 
 <!-- HOW TO USE: Replace [BRACKETED PLACEHOLDERS] with your project info.
-     Customize Beamer environments and CSS classes for your theme.
+     Customize Beamer environments for your theme.
      Keep this file under ~150 lines — Claude loads it every session.
      See the guide at docs/workflow-guide.html for full documentation. -->
 
@@ -15,9 +15,10 @@
 
 - **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
 - **Verify after** -- compile/render and confirm output at the end of every task
-- **Single source of truth** -- Beamer `.tex` is authoritative; Quarto `.qmd` derives from it
 - **Quality gates** -- nothing ships below 80/100
 - **[LEARN] tags** -- when corrected, save `[LEARN:category] wrong → right` to MEMORY.md
+- **Agent model selection** -- use opus for planning and review, haiku for implementation
+- **Review feedback** -- agents give directions, not code
 
 ---
 
@@ -31,9 +32,18 @@
 ├── Figures/                     # Figures and images
 ├── Preambles/header.tex         # LaTeX headers
 ├── Slides/                      # Beamer .tex files
-├── Quarto/                      # RevealJS .qmd files + theme
+├── data/                        # Data files
+│   ├── raw/                     # Original data (never modify)
+│   └── processed/               # Cleaned/transformed data
+├── stata/                       # Stata .do files
+│   └── logs/                    # Stata log files (.smcl, .log)
+├── scripts/                     # Utility scripts
+│   └── python/                  # Python analysis scripts
+├── output/                      # Analysis output
+│   ├── tables/                  # LaTeX/CSV tables
+│   ├── figures/                 # Generated figures (PDF/PNG)
+│   └── estimates/               # Saved estimates (pickle/parquet)
 ├── docs/                        # GitHub Pages (auto-generated)
-├── scripts/                     # Utility scripts + R code
 ├── quality_reports/             # Plans, session logs, merge reports
 ├── explorations/                # Research sandbox (see rules)
 ├── templates/                   # Session log, quality report templates
@@ -45,17 +55,23 @@
 ## Commands
 
 ```bash
-# LaTeX (3-pass, XeLaTeX only)
-cd Slides && TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
-BIBINPUTS=..:$BIBINPUTS bibtex file
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode file.tex
+# LaTeX (3-pass, XeLaTeX only — MikTeX on Windows)
+cd Slides
+xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
+bibtex --include-directory=.. file
+xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
+xelatex --include-directory=../Preambles -interaction=nonstopmode file.tex
 
-# Deploy Quarto to GitHub Pages
-./scripts/sync_to_docs.sh LectureN
+# Stata
+stata-mp -b do stata/analysis.do
+
+# Python (Anaconda)
+python scripts/python/analysis.py
 
 # Quality score
-python scripts/quality_score.py Quarto/file.qmd
+python scripts/quality_score.py Slides/file.tex
+python scripts/quality_score.py scripts/python/file.py
+python scripts/quality_score.py stata/file.do
 ```
 
 ---
@@ -74,16 +90,14 @@ python scripts/quality_score.py Quarto/file.qmd
 
 | Command | What It Does |
 |---------|-------------|
-| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex |
-| `/deploy [LectureN]` | Render Quarto + sync to docs/ |
+| `/compile-latex [file]` | 3-pass XeLaTeX + bibtex (MikTeX) |
 | `/extract-tikz [LectureN]` | TikZ → PDF → SVG |
 | `/proofread [file]` | Grammar/typo/overflow review |
 | `/visual-audit [file]` | Slide layout audit |
 | `/pedagogy-review [file]` | Narrative, notation, pacing review |
-| `/review-r [file]` | R code quality review |
-| `/qa-quarto [LectureN]` | Adversarial Quarto vs Beamer QA |
+| `/review-python [file]` | Python code quality review |
+| `/review-stata [file]` | Stata .do file review |
 | `/slide-excellence [file]` | Combined multi-agent review |
-| `/translate-to-quarto [file]` | Beamer → Quarto translation |
 | `/validate-bib` | Cross-reference citations |
 | `/devils-advocate` | Challenge slide design |
 | `/create-lecture` | Full lecture creation |
@@ -92,13 +106,13 @@ python scripts/quality_score.py Quarto/file.qmd
 | `/research-ideation [topic]` | Research questions + strategies |
 | `/interview-me [topic]` | Interactive research interview |
 | `/review-paper [file]` | Manuscript review |
-| `/data-analysis [dataset]` | End-to-end R analysis |
+| `/data-analysis [dataset]` | End-to-end Python/Stata analysis |
 
 ---
 
 <!-- CUSTOMIZE: Replace the example entries below with your own
-     Beamer environments and Quarto CSS classes. These are examples
-     from the original project — delete them and add yours. -->
+     Beamer environments. These are examples from the original
+     project — delete them and add yours. -->
 
 ## Beamer Custom Environments
 
@@ -112,22 +126,13 @@ python scripts/quality_score.py Quarto/file.qmd
 | `definitionbox[Title]` | Blue-bordered titled box | Formal definitions |
 -->
 
-## Quarto CSS Classes
-
-| Class              | Effect        | Use Case       |
-|--------------------|---------------|----------------|
-| `[.your-class]`    | [Description] | [When to use]  |
-
-<!-- Example entries (delete and replace with yours):
-| `.smaller` | 85% font | Dense content slides |
-| `.positive` | Green bold | Good annotations |
--->
-
 ---
 
 ## Current Project State
 
-| Lecture | Beamer | Quarto | Key Content |
-|---------|--------|--------|-------------|
-| 1: [Topic] | `Lecture01_Topic.tex` | `Lecture1_Topic.qmd` | [Brief description] |
-| 2: [Topic] | `Lecture02_Topic.tex` | -- | [Brief description] |
+| Component | File | Status | Key Content |
+|-----------|------|--------|-------------|
+| Paper | `paper.tex` | -- | [Brief description] |
+| Slides | `Slides/Lecture01_Topic.tex` | -- | [Brief description] |
+| Analysis | `scripts/python/analysis.py` | -- | [Brief description] |
+| Stata | `stata/analysis.do` | -- | [Brief description] |

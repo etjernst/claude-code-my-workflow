@@ -1,7 +1,6 @@
 ---
 paths:
   - "Slides/**/*.tex"
-  - "Quarto/**/*.qmd"
   - "quality_reports/**"
 ---
 
@@ -15,8 +14,8 @@ paths:
 
 1. **Grammar** -- subject-verb agreement, missing articles, wrong prepositions
 2. **Typos** -- misspellings, search-and-replace corruption, duplicated words
-3. **Overflow** -- overfull hbox (Beamer), content exceeding slide boundaries (Quarto)
-4. **Consistency** -- notation, citation style (`\citet` vs `\citep`, `[@key]`), terminology
+3. **Overflow** -- overfull hbox (Beamer), content exceeding slide boundaries
+4. **Consistency** -- notation, citation style (`\citet` vs `\citep`), terminology
 5. **Academic quality** -- informal abbreviations, missing words, awkward phrasing
 
 ## Three-Phase Workflow

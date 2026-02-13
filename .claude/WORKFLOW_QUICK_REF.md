@@ -52,8 +52,8 @@ Repeat
 
 <!-- Replace with YOUR project's locked-in preferences -->
 
-- [YOUR PATH CONVENTION] (e.g., `here::here()` for R, relative paths for LaTeX)
-- [YOUR SEED CONVENTION] (e.g., `set.seed()` once at top for stochastic code)
+- [YOUR PATH CONVENTION] (e.g., `Path()` for Python, `$root` globals for Stata, relative paths for LaTeX)
+- [YOUR SEED CONVENTION] (e.g., `np.random.seed()` / `set seed` once at top for stochastic code)
 - [YOUR FIGURE STANDARDS] (e.g., white bg, 300 DPI, custom theme)
 - [YOUR COLOR PALETTE] (e.g., institutional colors)
 - [YOUR TOLERANCE THRESHOLDS] (e.g., 1e-6 for point estimates)

@@ -1,6 +1,6 @@
 ---
 name: compile-latex
-description: Compile a Beamer LaTeX slide deck with XeLaTeX (3 passes + bibtex). Use when compiling lecture slides.
+description: Compile a Beamer LaTeX slide deck with XeLaTeX (3 passes + bibtex) using MikTeX on Windows. Use when compiling lecture slides.
 disable-model-invocation: true
 argument-hint: "[filename without .tex extension]"
 allowed-tools: ["Read", "Bash", "Glob"]
@@ -8,7 +8,7 @@ allowed-tools: ["Read", "Bash", "Glob"]
 
 # Compile Beamer LaTeX Slides
 
-Compile a Beamer slide deck using XeLaTeX with full citation resolution.
+Compile a Beamer slide deck using XeLaTeX with full citation resolution (MikTeX on Windows).
 
 ## Steps
 
@@ -16,16 +16,10 @@ Compile a Beamer slide deck using XeLaTeX with full citation resolution.
 
 ```bash
 cd Slides
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode $ARGUMENTS.tex
-BIBINPUTS=..:$BIBINPUTS bibtex $ARGUMENTS
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode $ARGUMENTS.tex
-TEXINPUTS=../Preambles:$TEXINPUTS xelatex -interaction=nonstopmode $ARGUMENTS.tex
-```
-
-**Alternative (latexmk):**
-```bash
-cd Slides
-TEXINPUTS=../Preambles:$TEXINPUTS BIBINPUTS=..:$BIBINPUTS latexmk -xelatex -interaction=nonstopmode $ARGUMENTS.tex
+xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
+bibtex --include-directory=.. $ARGUMENTS
+xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
+xelatex --include-directory=../Preambles -interaction=nonstopmode $ARGUMENTS.tex
 ```
 
 2. **Check for warnings:**
@@ -35,7 +29,7 @@ TEXINPUTS=../Preambles:$TEXINPUTS BIBINPUTS=..:$BIBINPUTS latexmk -xelatex -inte
 
 3. **Open the PDF** for visual verification:
    ```bash
-   open Slides/$ARGUMENTS.pdf
+   start Slides/$ARGUMENTS.pdf
    ```
 
 4. **Report results:**
@@ -52,5 +46,5 @@ TEXINPUTS=../Preambles:$TEXINPUTS BIBINPUTS=..:$BIBINPUTS latexmk -xelatex -inte
 
 ## Important
 - **Always use XeLaTeX**, never pdflatex
-- **TEXINPUTS** is required: your Beamer theme lives in `Preambles/`
-- **BIBINPUTS** is required: your `.bib` file lives in the repo root
+- **`--include-directory`** is required (MikTeX syntax): your Beamer theme lives in `Preambles/`
+- **bibtex `--include-directory`** is required: your `.bib` file lives in the repo root
