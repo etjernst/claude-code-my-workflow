@@ -136,7 +136,7 @@ Rules use path-scoped loading: **always-on** rules load every session (~100 line
 
 | Rule | Triggers On | What It Enforces |
 |------|------------|-----------------|
-| `verification-protocol` | `.tex`, `.qmd`, `docs/` | Task completion checklist |
+| `verification-protocol` | `.tex`, `*.py`, `*.do` | Task completion checklist |
 | `single-source-of-truth` | `figures/`, `.tex` | No content duplication; Beamer is authoritative |
 | `quality-gates` | `.tex`, `*.py`, `*.do` | 80/90/95 scoring + tolerance thresholds |
 | `python-code-conventions` | `*.py` | Python coding standards |
