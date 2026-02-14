@@ -1,7 +1,7 @@
 ---
 paths:
   - "scripts/**/*.py"
-  - "stata/**/*.do"
+  - "scripts/stata/**/*.do"
 ---
 
 # Replication-First Protocol

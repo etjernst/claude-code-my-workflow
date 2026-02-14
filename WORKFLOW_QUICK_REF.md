@@ -51,7 +51,7 @@ cd slides && xelatex --include-directory=../preambles -interaction=nonstopmode f
 python scripts/python/analysis.py
 
 # Run Stata analysis
-stata-mp -b do stata/analysis.do
+stata-mp -b do scripts/stata/analysis.do
 
 # Quality score
 python scripts/quality_score.py <file>

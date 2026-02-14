@@ -114,18 +114,18 @@ Markdown files auto-loaded by Claude. Two types:
 
 | Rule | Triggers On | What It Does |
 |------|------------|-------------|
-| `quality-gates.md` | `slides/**/*.tex`, `scripts/**/*.py`, `stata/**/*.do` | 80/90/95 scoring thresholds |
-| `verification-protocol.md` | `slides/**/*.tex`, `scripts/**/*.py`, `stata/**/*.do` | Must compile/run before reporting done |
+| `quality-gates.md` | `slides/**/*.tex`, `scripts/**/*.py`, `scripts/stata/**/*.do` | 80/90/95 scoring thresholds |
+| `verification-protocol.md` | `slides/**/*.tex`, `scripts/**/*.py`, `scripts/stata/**/*.do` | Must compile/run before reporting done |
 | `python-code-conventions.md` | `**/*.py` | Python coding standards |
 | `stata-code-conventions.md` | `**/*.do` | Stata coding standards |
-| `replication-protocol.md` | `scripts/**/*.py`, `stata/**/*.do` | Replicate original results before extending |
+| `replication-protocol.md` | `scripts/**/*.py`, `scripts/stata/**/*.do` | Replicate original results before extending |
 | `single-source-of-truth.md` | `figures/**/*`, `slides/**/*.tex` | No content duplication |
 | `proofreading-protocol.md` | `slides/**/*.tex`, `quality_reports/**` | Propose changes first, apply after approval |
 | `no-pause-beamer.md` | `slides/**/*.tex` | No overlay commands in Beamer |
 | `tikz-visual-quality.md` | `slides/**/*.tex` | TikZ diagram standards |
-| `knowledge-base-template.md` | `slides/**/*.tex`, `scripts/**/*.py`, `stata/**/*.do` | Notation and application registry |
+| `knowledge-base-template.md` | `slides/**/*.tex`, `scripts/**/*.py`, `scripts/stata/**/*.do` | Notation and application registry |
 | `pdf-processing.md` | `master_supporting_docs/**` | PyPDF2 for text, Read tool for visuals |
-| `orchestrator-research.md` | `scripts/**/*.py`, `stata/**/*.do`, `explorations/**` | Simplified orchestrator for research code |
+| `orchestrator-research.md` | `scripts/**/*.py`, `scripts/stata/**/*.do`, `explorations/**` | Simplified orchestrator for research code |
 | `exploration-folder-protocol.md` | `explorations/**` | Structured sandbox with archive lifecycle |
 | `exploration-fast-track.md` | `explorations/**` | 60/100 threshold for rapid prototyping |
 

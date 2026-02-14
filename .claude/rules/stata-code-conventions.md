@@ -1,7 +1,7 @@
 ---
 paths:
   - "**/*.do"
-  - "stata/**/*.do"
+  - "scripts/stata/**/*.do"
 ---
 
 # Stata Code Standards
@@ -31,7 +31,7 @@ Every .do file MUST start with a header block:
 clear all
 set more off
 capture log close
-log using "stata/logs/analysis_YYYYMMDD.smcl", replace
+log using "scripts/stata/logs/analysis_YYYYMMDD.smcl", replace
 
 * Set seed for reproducibility
 set seed 12345
@@ -68,7 +68,7 @@ esttab using "$tables/main_results.tex", ///
 
 ## 5. Logging
 
-- Always log output to `stata/logs/`
+- Always log output to `scripts/stata/logs/`
 - Close log at end of script: `log close`
 - Use `.smcl` format (Stata default)
 

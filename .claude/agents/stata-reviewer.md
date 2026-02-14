@@ -55,7 +55,7 @@ Produce a thorough, actionable code review report. You do NOT edit files -- you 
 
 ### 7. LOGGING
 - [ ] Log opened at start, closed at end
-- [ ] Log saved to `stata/logs/`
+- [ ] Log saved to `scripts/stata/logs/`
 
 ### 8. COMMENT QUALITY
 - [ ] Comments explain **WHY**, not WHAT

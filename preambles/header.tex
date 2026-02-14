@@ -1,0 +1,112 @@
+% header.tex — Shared Beamer preamble
+% Theme: metropolis | Engine: XeLaTeX | Bib: bibtex
+
+% ----------------------------------------------------------------------
+% Theme and fonts
+% ----------------------------------------------------------------------
+\usetheme{metropolis}
+\metroset{
+  progressbar=frametitle,
+  numbering=fraction,
+  block=fill,
+  sectionpage=progressbar
+}
+
+% ----------------------------------------------------------------------
+% Colors
+% ----------------------------------------------------------------------
+\definecolor{NavyPrimary}{HTML}{1B2A4A}
+\definecolor{TealAccent}{HTML}{2E7D8C}
+\definecolor{GoldAlert}{HTML}{D4A843}
+\definecolor{LightGold}{HTML}{FDF6E3}
+\definecolor{LightTeal}{HTML}{E8F4F6}
+\definecolor{LightGray}{HTML}{F5F5F5}
+
+\setbeamercolor{palette primary}{bg=NavyPrimary}
+\setbeamercolor{frametitle}{bg=NavyPrimary}
+\setbeamercolor{title separator}{fg=TealAccent}
+\setbeamercolor{progress bar}{fg=TealAccent, bg=NavyPrimary!20}
+\setbeamercolor{alerted text}{fg=GoldAlert}
+\setbeamercolor{example text}{fg=TealAccent}
+
+% ----------------------------------------------------------------------
+% Packages
+% ----------------------------------------------------------------------
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows.meta,
+  positioning,
+  shapes.geometric,
+  fit,
+  calc,
+  backgrounds
+}
+\usepackage[most]{tcolorbox}
+\usepackage{fontawesome5}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% ----------------------------------------------------------------------
+% Listings style
+% ----------------------------------------------------------------------
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  backgroundcolor=\color{LightGray},
+  frame=none,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  xleftmargin=4pt,
+  xrightmargin=4pt
+}
+
+% ----------------------------------------------------------------------
+% Custom tcolorbox environments
+% ----------------------------------------------------------------------
+
+% keybox — Gold background for key takeaways
+\newtcolorbox{keybox}{
+  colback=LightGold,
+  colframe=GoldAlert,
+  boxrule=0.5pt,
+  arc=2pt,
+  left=6pt, right=6pt,
+  top=4pt, bottom=4pt,
+  fontupper=\small
+}
+
+% highlightbox — Teal left-accent for highlights
+\newtcolorbox{highlightbox}{
+  colback=LightTeal,
+  colframe=TealAccent,
+  boxrule=0pt,
+  borderline west={3pt}{0pt}{TealAccent},
+  arc=0pt,
+  left=8pt, right=6pt,
+  top=4pt, bottom=4pt,
+  fontupper=\small
+}
+
+% definitionbox — Navy titled box for definitions
+\newtcolorbox{definitionbox}[1][Definition]{
+  colback=white,
+  colframe=NavyPrimary,
+  boxrule=1pt,
+  arc=2pt,
+  title=#1,
+  fonttitle=\bfseries\small,
+  fontupper=\small,
+  coltitle=white,
+  colbacktitle=NavyPrimary,
+  left=6pt, right=6pt,
+  top=4pt, bottom=4pt
+}
+
+% ----------------------------------------------------------------------
+% Utility commands
+% ----------------------------------------------------------------------
+\newcommand{\smark}{\textcolor{TealAccent}{\faCheckCircle}}
+\newcommand{\xmark}{\textcolor{red!70!black}{\faTimesCircle}}

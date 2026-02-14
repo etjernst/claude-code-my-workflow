@@ -8,7 +8,7 @@ Enforces quality gates: 80 (commit), 90 (PR), 95 (excellence).
 Usage:
     python scripts/quality_score.py slides/Lecture01_Topic.tex
     python scripts/quality_score.py scripts/python/analysis.py
-    python scripts/quality_score.py stata/analysis.do
+    python scripts/quality_score.py scripts/stata/analysis.do
     python scripts/quality_score.py slides/*.tex --summary
 """
 
@@ -36,6 +36,7 @@ BEAMER_RUBRIC = {
     },
     'minor': {
         'font_size_reduction': {'points': 1},
+        'orphan_runt': {'points': 2},
     }
 }
 
@@ -134,7 +135,7 @@ class IssueDetector:
             issues['major'].append({
                 'type': 'missing_log',
                 'description': 'No log file opened',
-                'details': 'Add `log using stata/logs/filename.smcl, replace`',
+                'details': 'Add `log using scripts/stata/logs/filename.smcl, replace`',
                 'points': 5
             })
 
@@ -326,6 +327,98 @@ class IssueDetector:
         return issues
 
     @staticmethod
+    def check_orphan_runts(content: str) -> List[int]:
+        """Detect orphan/runt words in Beamer frames.
+
+        A runt is a single word or very short phrase (<10 chars) that
+        sits alone on the final line of a paragraph or bullet point.
+        Flagged only inside frames, only when the preceding line is
+        substantial text (>=30 chars), indicating the word spilled over.
+        """
+        issues = []
+        lines = content.split('\n')
+        in_frame = False
+        in_tikz = False
+        in_tabular = False
+        in_lstlisting = False
+        # LaTeX structural commands that start a line and are not prose
+        struct_re = re.compile(
+            r'^\s*\\(begin|end|item|section|subsection|frametitle'
+            r'|includegraphics|input|vspace|hspace|centering'
+            r'|column|textbf|textit|label|ref|cite|caption'
+            r'|draw|node|fill|path|coordinate'  # TikZ
+            r'|toprule|midrule|bottomrule'       # booktabs
+            r')\b'
+        )
+
+        for i, line in enumerate(lines, 1):
+            raw = line.split('%')[0] if '%' in line else line
+
+            if r'\begin{frame}' in raw:
+                in_frame = True
+                continue
+            if r'\end{frame}' in raw:
+                in_frame = False
+                continue
+
+            # Track environments where runts don't apply
+            if r'\begin{tikzpicture}' in raw:
+                in_tikz = True
+            if r'\end{tikzpicture}' in raw:
+                in_tikz = False
+                continue
+            if r'\begin{tabular' in raw or r'\begin{tabbing' in raw:
+                in_tabular = True
+            if r'\end{tabular' in raw or r'\end{tabbing' in raw:
+                in_tabular = False
+                continue
+            if r'\begin{lstlisting}' in raw:
+                in_lstlisting = True
+            if r'\end{lstlisting}' in raw:
+                in_lstlisting = False
+                continue
+
+            if not in_frame or i < 2:
+                continue
+            if in_tikz or in_tabular or in_lstlisting:
+                continue
+
+            stripped = raw.strip()
+            # Skip blank lines, comments, structural commands
+            if not stripped or stripped.startswith('%'):
+                continue
+            if struct_re.match(stripped):
+                continue
+            # Skip lines that are just braces/brackets (code constructs)
+            if re.match(r'^[\[\]{})\],;]+$', stripped):
+                continue
+            # Skip intentional labels ending with colon
+            if stripped.endswith(':'):
+                continue
+            # Skip lines starting with backslash (LaTeX commands)
+            if stripped.startswith('\\'):
+                continue
+
+            # This line is short prose — check if it's a runt
+            if len(stripped) >= 10:
+                continue
+
+            # Look at the previous non-blank source line
+            prev_raw = ''
+            for j in range(i - 2, max(i - 5, -1), -1):
+                candidate = lines[j].split('%')[0] if '%' in lines[j] else lines[j]
+                if candidate.strip():
+                    prev_raw = candidate.strip()
+                    break
+
+            # Runt: previous line is substantial text (>=30 chars)
+            # and previous line is actual prose (not a command)
+            if len(prev_raw) >= 30 and not struct_re.match(prev_raw):
+                issues.append(i)
+
+        return issues
+
+    @staticmethod
     def check_overfull_hbox_risk(content: str) -> List[int]:
         """Detect lines in LaTeX source likely to cause overfull hbox."""
         issues = []
@@ -421,6 +514,18 @@ class QualityScorer:
                 'points': 10
             })
             self.score -= 10
+
+        # Check for orphan/runt words
+        runt_lines = IssueDetector.check_orphan_runts(content)
+        for line in runt_lines:
+            self.issues['minor'].append({
+                'type': 'orphan_runt',
+                'description': f'Orphan/runt word at line {line}',
+                'details': 'Short word alone on last line of text block; '
+                           'rephrase to pull it back to the previous line',
+                'points': 2
+            })
+            self.score -= 2
 
         self.score = max(0, self.score)
         return self._generate_report()
@@ -623,7 +728,7 @@ Examples:
   python scripts/quality_score.py scripts/python/analysis.py
 
   # Score a Stata .do file
-  python scripts/quality_score.py stata/analysis.do
+  python scripts/quality_score.py scripts/stata/analysis.do
 
   # Score multiple files
   python scripts/quality_score.py slides/*.tex

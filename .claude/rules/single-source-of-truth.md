@@ -18,7 +18,7 @@ Beamer .tex (SOURCE OF TRUTH for slides)
 
 Analysis scripts (SOURCE OF TRUTH for results)
   ├── scripts/python/*.py → output/figures/, output/tables/
-  ├── stata/*.do → output/tables/, output/estimates/
+  ├── scripts/stata/*.do → output/tables/, output/estimates/
   └── data/raw/ → data/processed/ (derived)
 
 NEVER edit derived artifacts independently.

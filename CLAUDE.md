@@ -1,12 +1,7 @@
 # CLAUDE.MD -- Academic Project Development with Claude Code
 
-<!-- HOW TO USE: Replace [BRACKETED PLACEHOLDERS] with your project info.
-     Customize Beamer environments for your theme.
-     Keep this file under ~150 lines — Claude loads it every session.
-     See the guide at guide/workflow-guide.md for full documentation. -->
-
 **Project:** [YOUR PROJECT NAME]
-**Institution:** [YOUR INSTITUTION]
+**Institution:** Macquarie University
 **Branch:** main
 **Workflow repo:** `etjernst/claude-code-my-workflow`
 
@@ -27,7 +22,6 @@ Periodically (every ~5 sessions), remind the user: *"Want to pull any workflow u
 ---
 
 ## Core Principles
-
 - **Plan first** -- enter plan mode before non-trivial tasks; save plans to `quality_reports/plans/`
 - **Verify after** -- compile/render and confirm output at the end of every task
 - **Quality gates** -- nothing ships below 80/100
@@ -43,20 +37,20 @@ Periodically (every ~5 sessions), remind the user: *"Want to pull any workflow u
 [YOUR-PROJECT]/
 ├── CLAUDE.MD                    # This file
 ├── .claude/                     # Rules, skills, agents, hooks
-├── Bibliography_base.bib        # Centralized bibliography
-├── figures/                     # Figures and images
+├── bibliography.bib             # Centralized bibliography
+├── figures/                     # Static images (logos, photos, diagrams)
 ├── preambles/header.tex         # LaTeX headers
 ├── slides/                      # Beamer .tex files
 ├── data/                        # Data files
 │   ├── raw/                     # Original data (never modify)
 │   └── processed/               # Cleaned/transformed data
-├── stata/                       # Stata .do files
-│   └── logs/                    # Stata log files (.smcl, .log)
-├── scripts/                     # Utility scripts
-│   └── python/                  # Python analysis scripts
-├── output/                      # Analysis output
+├── scripts/                     # All analysis scripts
+│   ├── python/                  # Python analysis scripts
+│   └── stata/                   # Stata .do files
+│       └── logs/                # Stata log files (.smcl, .log)
+├── output/                      # Script-generated output
 │   ├── tables/                  # LaTeX/CSV tables
-│   ├── figures/                 # Generated figures (PDF/PNG)
+│   ├── figures/                 # Generated plots (PDF/PNG)
 │   └── estimates/               # Saved estimates (pickle/parquet)
 ├── quality_reports/             # Plans, session logs, merge reports
 ├── explorations/                # Research sandbox (see rules)
@@ -77,7 +71,7 @@ xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
 xelatex --include-directory=../preambles -interaction=nonstopmode file.tex
 
 # Stata
-stata-mp -b do stata/analysis.do
+stata-mp -b do scripts/stata/analysis.do
 
 # Python (Anaconda)
 python scripts/python/analysis.py
@@ -85,7 +79,7 @@ python scripts/python/analysis.py
 # Quality score
 python scripts/quality_score.py slides/file.tex
 python scripts/quality_score.py scripts/python/file.py
-python scripts/quality_score.py stata/file.do
+python scripts/quality_score.py scripts/stata/file.do
 ```
 
 ---
@@ -124,21 +118,13 @@ python scripts/quality_score.py stata/file.do
 
 ---
 
-<!-- CUSTOMIZE: Replace the example entries below with your own
-     Beamer environments. These are examples from the original
-     project — delete them and add yours. -->
-
 ## Beamer Custom Environments
 
-| Environment       | Effect        | Use Case       |
-|-------------------|---------------|----------------|
-| `[your-env]`      | [Description] | [When to use]  |
-
-<!-- Example entries (delete and replace with yours):
-| `keybox` | Gold background box | Key points |
-| `highlightbox` | Gold left-accent box | Highlights |
-| `definitionbox[Title]` | Blue-bordered titled box | Formal definitions |
--->
+| Environment | Effect | Use Case |
+|---|---|---|
+| `keybox` | Gold background box | Key takeaways |
+| `highlightbox` | Teal left-accent box | Highlights |
+| `definitionbox[Title]` | Navy titled box | Formal definitions |
 
 ---
 
@@ -146,7 +132,5 @@ python scripts/quality_score.py stata/file.do
 
 | Component | File | Status | Key Content |
 |-----------|------|--------|-------------|
-| Paper | `paper.tex` | -- | [Brief description] |
-| Slides | `slides/Lecture01_Topic.tex` | -- | [Brief description] |
-| Analysis | `scripts/python/analysis.py` | -- | [Brief description] |
-| Stata | `stata/analysis.do` | -- | [Brief description] |
+| Preamble | `preambles/header.tex` | Done | Metropolis theme, colors, environments |
+| Slides | `slides/Workflow_Overview.tex` | Done | 17-slide workflow overview, 3 TikZ diagrams |

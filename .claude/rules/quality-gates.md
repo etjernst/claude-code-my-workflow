@@ -2,7 +2,7 @@
 paths:
   - "slides/**/*.tex"
   - "scripts/**/*.py"
-  - "stata/**/*.do"
+  - "scripts/stata/**/*.do"
 ---
 
 # Quality Gates & Scoring Rubrics

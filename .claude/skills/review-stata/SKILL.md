@@ -2,7 +2,7 @@
 name: review-stata
 description: Review a Stata .do file for code quality, reproducibility, and project standards. Launches the stata-reviewer agent.
 disable-model-invocation: true
-argument-hint: "[Stata file path, e.g., stata/analysis.do]"
+argument-hint: "[Stata file path, e.g., scripts/stata/analysis.do]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 ---
 
@@ -12,7 +12,7 @@ Review a Stata .do file for quality, reproducibility, and project compliance.
 
 ## Steps
 
-1. **Identify the file** specified in `$ARGUMENTS`. Resolve path in `stata/` if not fully qualified.
+1. **Identify the file** specified in `$ARGUMENTS`. Resolve path in `scripts/stata/` if not fully qualified.
 
 2. **Launch the stata-reviewer agent:**
 

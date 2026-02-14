@@ -2,7 +2,7 @@
 paths:
   - "slides/**/*.tex"
   - "scripts/**/*.py"
-  - "stata/**/*.do"
+  - "scripts/stata/**/*.do"
 ---
 
 # Research Knowledge Base: [YOUR PROJECT NAME]

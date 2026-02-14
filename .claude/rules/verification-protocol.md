@@ -2,7 +2,7 @@
 paths:
   - "slides/**/*.tex"
   - "scripts/**/*.py"
-  - "stata/**/*.do"
+  - "scripts/stata/**/*.do"
 ---
 
 # Task Completion Verification Protocol
@@ -20,8 +20,8 @@ paths:
 3. Spot-check estimates for reasonable magnitude
 
 ## For Stata Scripts:
-1. Run `stata-mp -b do stata/filename.do`
-2. Check the log file in `stata/logs/` for errors
+1. Run `stata-mp -b do scripts/stata/filename.do`
+2. Check the log file in `scripts/stata/logs/` for errors
 3. Verify output files (tables, figures) were created
 
 ## For TikZ Diagrams:

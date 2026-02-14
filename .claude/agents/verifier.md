@@ -33,9 +33,9 @@ python scripts/python/FILENAME.py 2>&1 | tail -20
 
 ### For `.do` files (Stata scripts):
 ```bash
-stata-mp -b do stata/FILENAME.do 2>&1
+stata-mp -b do scripts/stata/FILENAME.do 2>&1
 ```
-- Check the log file in `stata/logs/` for errors
+- Check the log file in `scripts/stata/logs/` for errors
 - Grep log for `r(` error codes
 - Verify output files were created
 
