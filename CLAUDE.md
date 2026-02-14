@@ -8,6 +8,21 @@
 **Project:** [YOUR PROJECT NAME]
 **Institution:** [YOUR INSTITUTION]
 **Branch:** main
+**Workflow repo:** `etjernst/claude-code-my-workflow`
+
+---
+
+## Repo Setup (first session only)
+
+If this project was just cloned from the workflow template, remind the user to set up remotes:
+
+```bash
+git remote rename origin workflow   # keep link to workflow repo for updates
+git remote add origin https://github.com/USER/NEW-PROJECT.git
+git push -u origin main
+```
+
+Periodically (every ~5 sessions), remind the user: *"Want to pull any workflow updates from the template repo?"* (`git fetch workflow && git merge workflow/main`).
 
 ---
 
@@ -43,7 +58,6 @@
 │   ├── tables/                  # LaTeX/CSV tables
 │   ├── figures/                 # Generated figures (PDF/PNG)
 │   └── estimates/               # Saved estimates (pickle/parquet)
-├── docs/                        # GitHub Pages (auto-generated)
 ├── quality_reports/             # Plans, session logs, merge reports
 ├── explorations/                # Research sandbox (see rules)
 ├── templates/                   # Session log, quality report templates

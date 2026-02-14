@@ -2,18 +2,30 @@
 
 > **Work in progress.** This is how I use Claude Code for academic work — creating lecture slides, running Stata and Python analyses, and managing LaTeX/Beamer workflows. I keep updating these files as I learn. Sharing with friends and colleagues.
 
-A ready-to-fork starter kit for academics using [Claude Code](https://code.claude.com/docs/en/overview) with **LaTeX/Beamer + Stata + Python**. You describe what you want; Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results — like a contractor who handles the entire job.
+A starter kit for academics using [Claude Code](https://code.claude.com/docs/en/overview) with **LaTeX/Beamer + Stata + Python**. Clone it for each new project, keep the link for workflow updates. You describe what you want; Claude plans the approach, runs specialized agents, fixes issues, verifies quality, and presents results — like a contractor who handles the entire job.
 
 ---
 
 ## Quick Start (5 minutes)
 
-### 1. Fork & Clone
+### 1. Clone & Set Up Remotes
 
 ```bash
-# Fork this repo on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/claude-code-my-workflow.git my-project
+# Clone the workflow repo as a new project:
+git clone https://github.com/etjernst/claude-code-my-workflow.git my-project
 cd my-project
+
+# Keep the workflow repo as 'workflow' remote (for pulling updates later):
+git remote rename origin workflow
+
+# Point 'origin' to your new project repo:
+git remote add origin https://github.com/YOUR_USERNAME/my-project.git
+git push -u origin main
+```
+
+To pull workflow improvements into an existing project later:
+```bash
+git fetch workflow && git merge workflow/main
 ```
 
 ### 2. Start Claude Code and Paste This Prompt
