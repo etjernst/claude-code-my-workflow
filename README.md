@@ -23,8 +23,12 @@ git remote add origin https://github.com/YOUR_USERNAME/my-project.git
 git push -u origin main
 ```
 
-To pull workflow improvements into an existing project later:
+To sync workflow improvements into an existing project later:
 ```bash
+# Option 1: Sync script (copies infrastructure, skips project-specific files)
+bash /path/to/workflow-repo/scripts/sync-workflow.sh /path/to/project
+
+# Option 2: Git merge (pulls everything, may need conflict resolution)
 git fetch workflow && git merge workflow/main
 ```
 
