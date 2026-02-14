@@ -3,7 +3,7 @@
 <!-- HOW TO USE: Replace [BRACKETED PLACEHOLDERS] with your project info.
      Customize Beamer environments for your theme.
      Keep this file under ~150 lines — Claude loads it every session.
-     See the guide at docs/workflow-guide.html for full documentation. -->
+     See the guide at guide/workflow-guide.md for full documentation. -->
 
 **Project:** [YOUR PROJECT NAME]
 **Institution:** [YOUR INSTITUTION]

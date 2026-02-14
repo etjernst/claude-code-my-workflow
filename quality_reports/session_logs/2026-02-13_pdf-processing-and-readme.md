@@ -69,4 +69,4 @@ Thorough grep sweep for R, Quarto, macOS, old path patterns, and removed agent/s
 ## Open Questions
 
 - The untracked PDF (`MQBS Salary Loading Scheme and Guidelines (Feb. 2024).pdf`) is still in the repo root. Move to `master_supporting_docs/` or leave untracked.
-- The `guide/` directory still uses `.qmd` format -- may want to convert to plain `.md` or HTML in a future session since Quarto is no longer in the toolchain.
+- ~~The `guide/` directory still uses `.qmd` format~~ -- RESOLVED: converted to plain `.md`, deleted all Quarto files (`_quarto.yml`, `custom.scss`, `.gitignore`, `.qmd`, `.html`).

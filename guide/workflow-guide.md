@@ -1,36 +1,14 @@
----
-title: "My Claude Code Setup"
-subtitle: "A Comprehensive Guide to Multi-Agent Slide Development, Code Review, and Research Automation"
-date: "2026-02-13"
-format:
-  html:
-    toc: true
-    toc-depth: 3
-    toc-location: left
-    number-sections: true
-    theme:
-      - cosmo
-      - custom.scss
-    code-copy: true
-    code-overflow: wrap
-    highlight-style: github-dark
-    smooth-scroll: true
-    self-contained: true
-    link-external-newwindow: true
-    include-in-header:
-      text: |
-        <style>
-        :not(pre) > code { background-color: rgba(185,151,91,0.1) !important; color: #8b6914 !important; padding: 0.15em 0.45em !important; border-radius: 3px !important; font-size: 0.87em !important; }
-        pre code { background-color: transparent !important; color: inherit !important; padding: 0 !important; font-size: inherit !important; border-radius: 0 !important; }
-        body:not(.floating):not(.docked) .page-columns.toc-left {
-          grid-template-columns: [screen-start] 1.5em [screen-start-inset] 5fr [page-start] 35px [page-start-inset] minmax(0px,175px) [body-start-outset] 35px [body-start] 1.5em [body-content-start] minmax(450px,calc(1100px - 3em)) [body-content-end] 1.5em [body-end] 50px [body-end-outset] minmax(0px,200px) [page-end-inset] 35px [page-end] 5fr [screen-end-inset] 1.5em [screen-end] !important;
-        }
-        </style>
+# My Claude Code Setup
+
+**A Comprehensive Guide to Multi-Agent Slide Development, Code Review, and Research Automation**
+
+*Last updated: 2026-02-13*
+
 ---
 
-# Why This Workflow Exists {#sec-why}
+## 1. Why This Workflow Exists
 
-## The Problem
+### The Problem
 
 If you've ever built lecture slides, you know the pain:
 
@@ -41,7 +19,7 @@ If you've ever built lecture slides, you know the pain:
 
 This workflow solves all of these problems. You describe what you want --- "create a new lecture on synthetic control" or "run the replication analysis for Table 2" --- and Claude handles the rest: plans the approach, implements it, runs specialized reviewers, fixes issues, verifies quality, and presents results. Like a contractor who manages the entire job.
 
-## What Makes Claude Code Different
+### What Makes Claude Code Different
 
 Claude Code runs on your computer with full access to your file system, terminal, and git. It works as a **CLI tool**, a **VS Code extension**, or through the **Claude Desktop app** --- same capabilities, same configuration, different interface. Here is what that enables:
 
@@ -55,19 +33,15 @@ Claude Code runs on your computer with full access to your file system, terminal
 | Multi-agent workflows | 8 specialized agents for proofreading, layout, pedagogy, code review |
 | Quality gates | Automated scoring --- nothing ships below 80/100 |
 
-::: {.callout-note}
-## You Don't Need All of This on Day One
-
-This guide describes the full system --- 8 agents, 17 skills, 17 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
-:::
+> **Note:** You don't need all of this on day one. This guide describes the full system --- 8 agents, 17 skills, 17 rules. That is the ceiling, not the floor. **Start with just CLAUDE.md and 2--3 skills** (`/compile-latex`, `/proofread`, `/commit`). Add rules and agents as you discover what you need. The template is designed for progressive adoption: fork it, fill in the placeholders, and start working. Everything else is there when you're ready.
 
 ---
 
-# Getting Started {#sec-setup}
+## 2. Getting Started
 
 You need two things: fork the repo, and paste a prompt. Claude handles everything else.
 
-## Step 1: Fork & Clone
+### Step 1: Fork & Clone
 
 ```bash
 # Fork this repo on GitHub (click "Fork" on the repo page), then:
@@ -77,40 +51,39 @@ cd my-project
 
 Replace `YOUR_USERNAME` with your GitHub username.
 
-## Step 2: Start Claude Code and Paste This Prompt {#sec-first-session}
+### Step 2: Start Claude Code and Paste This Prompt
 
 Open your terminal in the project directory, run `claude`, and paste the following. Fill in the **bolded placeholders** with your project details:
 
-::: {.callout-note collapse="true"}
-## Using VS Code or Claude Desktop instead of the terminal?
+<details>
+<summary><strong>Using VS Code or Claude Desktop instead of the terminal?</strong></summary>
 
 Everything in this guide works the same in any Claude Code interface. In **VS Code**, open the Claude Code panel (click the Claude icon in the sidebar or press Cmd+Shift+P / Ctrl+Shift+P and search for "Claude Code: Open"). In **Claude Desktop**, open your project folder and start a local session. Then paste the starter prompt below.
 
 The guide shows terminal commands because they are the most universal way to explain things, but every skill, agent, hook, and rule works identically regardless of which interface you use.
-:::
 
-::: {.callout-tip appearance="simple"}
-## Starter Prompt
+</details>
 
-I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2--3 sentences --- what you're building, who it's for, what tools you use (e.g., LaTeX/Beamer, Stata, Python).]**
+**Starter Prompt:**
 
-I want our collaboration to be structured, precise, and rigorous --- even if it takes more time. When creating visuals, everything must be polished and publication-ready. I don't want to repeat myself, so our workflow should be smart about remembering decisions and learning from corrections.
-
-I've set up the Claude Code academic workflow (forked from `pedrohcgs/claude-code-my-workflow`). The configuration files are already in this repo (`.claude/`, `CLAUDE.md`, templates, scripts). Please read them, understand the workflow, and then **update all configuration files to fit my project** --- fill in placeholders in `CLAUDE.md`, adjust rules if needed, and propose any customizations specific to my use case.
-
-After that, use the plan-first workflow for all non-trivial tasks. Once I approve a plan, switch to contractor mode --- coordinate everything autonomously and only come back to me when there's ambiguity or a decision to make. For our first few sessions, check in with me a bit more often so I can learn how the workflow operates.
-
-Enter plan mode and start by adapting the workflow configuration for this project.
-:::
+> I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2--3 sentences --- what you're building, who it's for, what tools you use (e.g., LaTeX/Beamer, Stata, Python).]**
+>
+> I want our collaboration to be structured, precise, and rigorous --- even if it takes more time. When creating visuals, everything must be polished and publication-ready. I don't want to repeat myself, so our workflow should be smart about remembering decisions and learning from corrections.
+>
+> I've set up the Claude Code academic workflow (forked from `pedrohcgs/claude-code-my-workflow`). The configuration files are already in this repo (`.claude/`, `CLAUDE.md`, templates, scripts). Please read them, understand the workflow, and then **update all configuration files to fit my project** --- fill in placeholders in `CLAUDE.md`, adjust rules if needed, and propose any customizations specific to my use case.
+>
+> After that, use the plan-first workflow for all non-trivial tasks. Once I approve a plan, switch to contractor mode --- coordinate everything autonomously and only come back to me when there's ambiguity or a decision to make. For our first few sessions, check in with me a bit more often so I can learn how the workflow operates.
+>
+> Enter plan mode and start by adapting the workflow configuration for this project.
 
 **What this does:** Claude will read `CLAUDE.md` and all the rules, fill in your project name, institution, Beamer environments, and project state table, then propose any rule adjustments for your specific use case. You approve the plan, and Claude handles the rest. From there, you just describe what you want to build.
 
-## Optional: Manual Setup
+### Optional: Manual Setup
 
 If you prefer to configure things yourself instead of letting Claude handle it:
 
-::: {.callout-note collapse="true"}
-## Manual Configuration Steps (click to expand)
+<details>
+<summary><strong>Manual Configuration Steps</strong></summary>
 
 **Customize CLAUDE.md** --- Open `CLAUDE.md` and replace all `[BRACKETED PLACEHOLDERS]`:
 
@@ -135,21 +108,18 @@ If you prefer to configure things yourself instead of letting Claude handle it:
 /proofread slides/MyFirstLecture.tex
 python scripts/quality_score.py slides/MyFirstLecture.tex
 ```
-:::
 
-::: {.callout-tip}
-## Start Small
+</details>
 
-You don't need to fill everything in upfront. Start with 5--10 notation entries and add more as you develop lectures. The starter prompt will set up the essentials --- you can always refine later.
-:::
+> **Tip:** You don't need to fill everything in upfront. Start with 5--10 notation entries and add more as you develop lectures. The starter prompt will set up the essentials --- you can always refine later.
 
 ---
 
-# The System in Action {#sec-system}
+## 3. The System in Action
 
 With setup covered, here is what the system actually *does*. This section walks through the core mechanisms: specialized agents, automatic quality scoring, and the orchestrator.
 
-## Why Specialized Agents Beat One-Size-Fits-All
+### Why Specialized Agents Beat One-Size-Fits-All
 
 Consider proofreading a 140-slide lecture deck. You could ask Claude:
 
@@ -173,7 +143,7 @@ Now compare with specialized agents:
 
 Each agent reads the same file but examines a different dimension with full attention. The `/slide-excellence` skill runs them all in parallel.
 
-## The Orchestrator: Coordinating Agents Automatically
+### The Orchestrator: Coordinating Agents Automatically
 
 Individual agents are specialists. Skills like `/slide-excellence` coordinate a few agents for specific tasks. But in day-to-day work, you should not have to think about which agents to run. That is the orchestrator's job.
 
@@ -181,7 +151,7 @@ The **orchestrator protocol** (`.claude/rules/orchestrator-protocol.md`) is an a
 
 You never invoke the orchestrator manually --- it is the default mode of operation for any non-trivial task. Skills remain available for standalone use (e.g., `/proofread` for a quick grammar check), but the orchestrator handles the full lifecycle automatically.
 
-## Quality Scoring: The 80/90/95 System {#sec-quality}
+### Quality Scoring: The 80/90/95 System
 
 Every file gets a quality score from 0 to 100:
 
@@ -205,7 +175,7 @@ Points are deducted for issues:
 
 The verification protocol (`.claude/rules/verification-protocol.md`) requires that Claude compile or run every output before reporting a task as complete. The orchestrator enforces this as an explicit step in its loop. This means Claude **cannot** say "done" without actually checking the output.
 
-## Creating Your Own Domain Reviewer
+### Creating Your Own Domain Reviewer
 
 The template includes `domain-reviewer.md` --- a skeleton for building a substance reviewer specific to your field.
 
@@ -223,11 +193,11 @@ To customize, open `.claude/agents/domain-reviewer.md` and fill in your domain's
 
 ---
 
-# The Building Blocks {#sec-blocks}
+## 4. The Building Blocks
 
 Understanding the configuration layers helps you customize the workflow and debug when things go wrong.
 
-## CLAUDE.md --- Your Project's Constitution
+### CLAUDE.md --- Your Project's Constitution
 
 `CLAUDE.md` is the single most important file. Claude reads it at the start of every session. But here is the critical insight: **Claude reliably follows about 100--150 custom instructions.** Your system prompt already uses ~50, leaving ~100--150 for your project. CLAUDE.md and always-on rules share this budget.
 
@@ -242,13 +212,9 @@ This means CLAUDE.md should be a **slim constitution** --- short directives and 
 
 Move everything else into `.claude/rules/` files (with path-scoping so they only load when relevant).
 
-::: {.callout-important}
-## Keep It Lean
+> **Important:** Keep CLAUDE.md under 150 lines. If it exceeds ~150 lines, Claude starts ignoring rules silently. Put detailed standards in path-scoped rules (`.claude/rules/`) instead --- they only load when Claude works on matching files, so they don't compete for attention.
 
-CLAUDE.md loads every session. If it exceeds ~150 lines, Claude starts ignoring rules silently. Put detailed standards in path-scoped rules (`.claude/rules/`) instead --- they only load when Claude works on matching files, so they don't compete for attention.
-:::
-
-## Rules --- Domain Knowledge That Auto-Loads
+### Rules --- Domain Knowledge That Auto-Loads
 
 Rules are markdown files in `.claude/rules/` that Claude loads automatically. The key design principle is **path-scoping**: rules with a `paths:` YAML frontmatter only load when Claude works on matching files.
 
@@ -277,7 +243,7 @@ Rules are markdown files in `.claude/rules/` that Claude loads automatically. Th
 
 This design keeps always-on context under ~100 lines while providing rich, domain-specific guidance exactly when Claude needs it.
 
-### Example: Path-Scoped Python Code Conventions Rule
+#### Example: Path-Scoped Python Code Conventions Rule
 
 ```yaml
 ---
@@ -304,7 +270,7 @@ COLORS = {
 
 The `paths:` block means this rule only loads when Claude reads or edits a `.py` file. When Claude works on a `.tex` file, this rule doesn't consume any of the instruction budget.
 
-## Skills --- Reusable Slash Commands
+### Skills --- Reusable Slash Commands
 
 Skills are multi-step workflows invoked with `/command`. Each skill lives in `.claude/skills/[name]/SKILL.md`:
 
@@ -339,7 +305,7 @@ argument-hint: "[filename without .tex extension]"
 | `/review-stata` | Stata .do file review | After writing/modifying do-files |
 | `/data-analysis` | End-to-end analysis | Empirical analysis phase |
 
-## Agents --- Specialized Reviewers
+### Agents --- Specialized Reviewers
 
 Agents are the real power of this system. Each agent is an expert in one dimension of quality:
 
@@ -355,13 +321,9 @@ Agents are the real power of this system. Each agent is an expert in one dimensi
 +-- domain-reviewer.md    # YOUR domain-specific substance review
 ```
 
-::: {.callout-note}
-## Why Specialized Agents?
+> **Note:** A single Claude prompt trying to check grammar, layout, math, and code simultaneously will do a mediocre job at all of them. Specialized agents focus on one dimension and do it thoroughly. The `/slide-excellence` skill runs them all in parallel, then synthesizes results.
 
-A single Claude prompt trying to check grammar, layout, math, and code simultaneously will do a mediocre job at all of them. Specialized agents focus on one dimension and do it thoroughly. The `/slide-excellence` skill runs them all in parallel, then synthesizes results.
-:::
-
-### Multi-Model Strategy: Cost vs. Quality
+#### Multi-Model Strategy: Cost vs. Quality
 
 Not all agents need the same model. By default, all agents use `model: inherit` (they use whatever model your main session runs). But you can customize this to optimize cost:
 
@@ -380,7 +342,7 @@ model: haiku   # was: inherit
 ---
 ```
 
-## Settings --- Permissions and Hooks
+### Settings --- Permissions and Hooks
 
 `.claude/settings.json` controls what Claude is allowed to do. Here is a simplified excerpt:
 
@@ -419,12 +381,9 @@ The template includes four hooks:
 | File protection | `PreToolUse` | Blocks accidental edits to protected files |
 | Context snapshot | `PreCompact` | Saves context to disk before auto-compression |
 
-::: {.callout-tip}
-## Hook Design Principle
-Use **command-based hooks** for fast, mechanical checks (file exists? counter threshold?). Use **rules** for nuanced judgment (did Claude verify correctly?). Avoid prompt-based hooks that trigger an LLM call on every response --- the latency adds up fast.
-:::
+> **Tip:** Use **command-based hooks** for fast, mechanical checks (file exists? counter threshold?). Use **rules** for nuanced judgment (did Claude verify correctly?). Avoid prompt-based hooks that trigger an LLM call on every response --- the latency adds up fast.
 
-## Memory --- Cross-Session Persistence
+### Memory --- Cross-Session Persistence
 
 Claude Code has an auto-memory system at `~/.claude/projects/[project]/memory/MEMORY.md`. This file persists across sessions and is loaded into every conversation.
 
@@ -448,15 +407,15 @@ Use it for:
 - [LEARN:pdf] Always pass pages parameter when reading PDFs
 ```
 
-### Plans --- Compression-Resistant Task Memory
+#### Plans --- Compression-Resistant Task Memory
 
 Every non-trivial plan is saved to `quality_reports/plans/` with a timestamp. Plans survive auto-compression and session boundaries.
 
-### Session Logs --- Why-Not-Just-What History
+#### Session Logs --- Why-Not-Just-What History
 
 Git commits record what changed, but not *why*. Session logs fill this gap. Claude writes to `quality_reports/session_logs/` at three points: right after plan approval, incrementally during implementation, and at session end.
 
-### How It All Fits Together
+#### How It All Fits Together
 
 | Layer | File | Survives Compression? | Purpose |
 |-------|------|----------------------|---------|
@@ -470,9 +429,9 @@ The first four layers are your safety net. Anything written to disk survives ind
 
 ---
 
-# Workflow Patterns {#sec-patterns}
+## 5. Workflow Patterns
 
-## Pattern 1: Plan-First Development {#pattern-1-plan-first-development}
+### Pattern 1: Plan-First Development
 
 The plan-first pattern ensures that non-trivial tasks begin with thinking, not typing.
 
@@ -491,14 +450,14 @@ Non-trivial task arrives
   +-- Step 8: Update session log + plan status to COMPLETED
 ```
 
-### Context Preservation: Prefer Auto-Compression
+#### Context Preservation: Prefer Auto-Compression
 
 - **`/clear`** --- destroys everything. Starting over from zero.
 - **Auto-compression** --- graceful degradation. Keeps the most important context.
 
 The rule: **avoid `/clear`** --- prefer auto-compression. Always save important context to disk first. Plans and important decisions live in files on disk, where they cannot be compressed away.
 
-## Pattern 2: Contractor Mode (Orchestrator) {#pattern-2-contractor-mode-orchestrator}
+### Pattern 2: Contractor Mode (Orchestrator)
 
 Once a plan is approved, the orchestrator takes over. Think of it as a **general contractor**: you are the client, the plan is the blueprint, and the orchestrator hires specialists, inspects their work, and only calls you when the job passes inspection.
 
@@ -536,7 +495,7 @@ User: "Create a new lecture on synthetic control"
               NO  -> Loop to Step 3 (max 5 rounds)
 ```
 
-### Agent Selection
+#### Agent Selection
 
 The orchestrator selects agents based on which files were touched:
 
@@ -548,13 +507,13 @@ The orchestrator selects agents based on which files were touched:
 | TikZ diagrams present | tikz-reviewer |
 | Domain content | domain-reviewer (if configured) |
 
-### "Just Do It" Mode
+#### "Just Do It" Mode
 
 > "Create the lecture. Just do it."
 
 The orchestrator still runs the full verify-review-fix loop (quality is non-negotiable), but skips the final approval pause and auto-commits if the score is 80 or above.
 
-## Pattern 3: Creating a New Lecture
+### Pattern 3: Creating a New Lecture
 
 The `/create-lecture` skill guides you through a structured lecture creation workflow:
 
@@ -572,7 +531,7 @@ The `/create-lecture` skill guides you through a structured lecture creation wor
   +-- Phase 6: Commit and report
 ```
 
-## Pattern 4: Replication-First Coding
+### Pattern 4: Replication-First Coding
 
 When working with papers that have replication packages:
 
@@ -592,13 +551,9 @@ Phase 4: Only then extend
   +-- New estimators, new specifications, course-specific figures
 ```
 
-::: {.callout-important}
-## Never Skip Replication
+> **Important:** In one course, we discovered that a widely-used package silently produced **incorrect estimates** due to a subtle specification issue. Without the replication-first protocol, these wrong numbers would have been taught to PhD students. Never skip replication.
 
-In one course, we discovered that a widely-used package silently produced **incorrect estimates** due to a subtle specification issue. Without the replication-first protocol, these wrong numbers would have been taught to PhD students.
-:::
-
-## Pattern 5: Multi-Agent Review
+### Pattern 5: Multi-Agent Review
 
 The `/slide-excellence` skill runs multiple agents in parallel:
 
@@ -614,7 +569,7 @@ The `/slide-excellence` skill runs multiple agents in parallel:
   +-- Synthesize: Combined quality score + prioritized fix list
 ```
 
-## Pattern 6: Self-Improvement Loop {#pattern-6-self-improvement-loop}
+### Pattern 6: Self-Improvement Loop
 
 Every correction gets tagged for future reference:
 
@@ -628,7 +583,7 @@ Every correction gets tagged for future reference:
 
 These tags are searchable and persist in MEMORY.md across sessions.
 
-## Pattern 7: Devil's Advocate
+### Pattern 7: Devil's Advocate
 
 At any design decision, invoke the Devil's Advocate:
 
@@ -636,9 +591,9 @@ At any design decision, invoke the Devil's Advocate:
 
 This catches unstated assumptions, alternative orderings, notation confusion, and cognitive load issues.
 
-## Research Workflows {#sec-research-workflows}
+### Research Workflows
 
-### Pattern 8: Parallel Agents for Research Tasks
+#### Pattern 8: Parallel Agents for Research Tasks
 
 Claude Code can spawn **multiple agents simultaneously**. The orchestrator recognizes independent subtasks and spawns parallel agents automatically.
 
@@ -650,7 +605,7 @@ Claude Code can spawn **multiple agents simultaneously**. The orchestrator recog
 
 Practical limits: **3 agents** is the sweet spot. Agents are independent --- they cannot see each other's work.
 
-### Pattern 9: Research Exploration Workflow {#pattern-9-exploration}
+#### Pattern 9: Research Exploration Workflow
 
 All experimental work goes into `explorations/` first:
 
@@ -675,7 +630,7 @@ explorations/
 
 The **kill switch** is explicit: at any point, stop, archive with a one-paragraph explanation, and move on. No guilt, no sunk cost.
 
-### Pattern 10: Research Skills {#pattern-10-research-skills}
+#### Pattern 10: Research Skills
 
 Five skills support the research workflow:
 
@@ -689,21 +644,21 @@ Five skills support the research workflow:
 
 ---
 
-# Customizing for Your Domain {#sec-customize}
+## 6. Customizing for Your Domain
 
-## Step 1: Build Your Knowledge Base
+### Step 1: Build Your Knowledge Base
 
 The knowledge base (`.claude/rules/knowledge-base-template.md`) provides skeleton tables for notation conventions, lecture progression, applications, design principles, anti-patterns, and code pitfalls.
 
-## Step 2: Create Your Domain Reviewer
+### Step 2: Create Your Domain Reviewer
 
 Copy `.claude/agents/domain-reviewer.md` and customize the 5 lenses for your field.
 
-## Step 3: Add Field-Specific Coding Standards
+### Step 3: Add Field-Specific Coding Standards
 
 Add pitfalls and conventions to `.claude/rules/python-code-conventions.md` and/or `.claude/rules/stata-code-conventions.md`.
 
-## Step 4: Add Project-Specific Skills
+### Step 4: Add Project-Specific Skills
 
 If you have recurring workflows, create new skills:
 
@@ -713,7 +668,7 @@ mkdir -p .claude/skills/my-new-skill
 
 Then create `SKILL.md` with YAML frontmatter + step-by-step instructions.
 
-## Tips from Iteration
+### Tips from Iteration
 
 1. **Keep CLAUDE.md under 150 lines.** Use path-scoped rules for detailed standards.
 2. **Add rules incrementally.** Don't try to write all rules upfront.
@@ -725,9 +680,9 @@ Then create `SKILL.md` with YAML frontmatter + step-by-step instructions.
 
 ---
 
-# Appendix: File Reference {#sec-appendix}
+## Appendix: File Reference
 
-## All Agents
+### All Agents
 
 | Agent | File | Purpose |
 |-------|------|---------|
@@ -740,7 +695,7 @@ Then create `SKILL.md` with YAML frontmatter + step-by-step instructions.
 | Verifier | `.claude/agents/verifier.md` | Task completion verification |
 | Domain Reviewer | `.claude/agents/domain-reviewer.md` | Your domain-specific review |
 
-## All Skills
+### All Skills
 
 | Skill | Directory | Purpose |
 |-------|-----------|---------|
@@ -762,7 +717,7 @@ Then create `SKILL.md` with YAML frontmatter + step-by-step instructions.
 | `/review-paper` | `.claude/skills/review-paper/` | Manuscript review |
 | `/data-analysis` | `.claude/skills/data-analysis/` | End-to-end Python/Stata analysis |
 
-## All Rules
+### All Rules
 
 **Always-on** (load every session):
 
@@ -791,7 +746,7 @@ Then create `SKILL.md` with YAML frontmatter + step-by-step instructions.
 | Exploration Folder | `exploration-folder-protocol.md` | `explorations/` |
 | Exploration Fast-Track | `exploration-fast-track.md` | `explorations/` |
 
-## Hooks
+### Hooks
 
 | Hook | Type | Configuration |
 |------|------|--------------|
