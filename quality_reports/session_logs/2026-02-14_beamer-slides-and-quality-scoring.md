@@ -118,6 +118,12 @@ Saved to global `~/.claude/CLAUDE.md` and project `MEMORY.md`:
 - Flush emdashes (no spaces around `---`)
 - No orphan/runt words (rephrase to eliminate)
 
+### 9. Added chunked PDF processing for large documents
+
+Updated `.claude/rules/pdf-processing.md` with an automatic routing strategy based on page count:
+- **Under 40 pages** --- standard pathway (read full text, spot-check, clean up)
+- **40+ pages** --- chunked pathway: split text into ~15-page chunks at section boundaries (numbered sections, all-caps headings, common academic headings) with page-marker fallback. Process each chunk sequentially, writing structured notes (arguments, methods, findings, questions) to a working notes file. Synthesize from notes only---never re-read original. Visual spot-check and cleanup steps preserved.
+
 ## Open Items
 
 - [ ] Environment-aware runt detection (`quality_reports/TODO.md`)
