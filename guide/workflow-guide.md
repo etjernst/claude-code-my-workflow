@@ -248,6 +248,50 @@ When working with papers that have replication packages:
 
 ---
 
+## Adopting This Workflow in an Existing Project
+
+If you already have a project with outdated Claude instructions, add this repo as a second remote and merge:
+
+```bash
+cd your-existing-project
+git remote add workflow https://github.com/etjernst/claude-code-my-workflow.git
+git fetch workflow
+git checkout -b update-claude-workflow
+git merge workflow/main --allow-unrelated-histories
+```
+
+This will produce conflicts wherever your old Claude instructions overlap with the new ones. Don't resolve them yourself---let Claude help.
+
+### Claude-Assisted Conflict Resolution
+
+Start a Claude Code session in your project and say:
+
+> I just merged my workflow template repo. Review all merge conflicts. Keep the new workflow infrastructure but preserve any project-specific customizations (my project name, institution, file paths, bib entries, custom environments). Resolve all conflicts and show me what you chose for each one.
+
+If your project has specific state you don't want lost, tell Claude explicitly:
+
+> These are project-specific and must be preserved: [list them]
+
+Review the result before committing:
+
+```bash
+git diff --cached   # inspect what Claude staged
+git checkout main && git merge update-claude-workflow
+```
+
+### Pulling Future Updates
+
+Periodically pull infrastructure updates from the template:
+
+```bash
+git fetch workflow
+git merge workflow/main
+```
+
+Same conflict-resolution workflow applies. The `origin` remote stays pointed at your project; `workflow` points at the template.
+
+---
+
 ## Context Management
 
 - **Prefer auto-compression** over `/clear` — auto-compression keeps important context, `/clear` destroys everything
