@@ -41,5 +41,5 @@ slides/*.tex
 
 ## Bibliography location:
 ```
-Bibliography_base.bib  (repo root)
+bibliography.bib  (repo root)
 ```

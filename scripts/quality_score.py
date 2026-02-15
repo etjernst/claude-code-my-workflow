@@ -390,7 +390,7 @@ class IssueDetector:
             if struct_re.match(stripped):
                 continue
             # Skip lines that are just braces/brackets (code constructs)
-            if re.match(r'^[\[\]{})\],;]+$', stripped):
+            if re.match(r'^[{}\[\](),;]+$', stripped):
                 continue
             # Skip intentional labels ending with colon
             if stripped.endswith(':'):
@@ -480,15 +480,15 @@ class QualityScorer:
             return self._generate_report()
 
         # Check for undefined/broken citations
-        bib_file = self.filepath.parent.parent / 'Bibliography_base.bib'
+        bib_file = self.filepath.parent.parent / 'bibliography.bib'
         if not bib_file.exists():
-            bib_file = self.filepath.parent / 'Bibliography_base.bib'
+            bib_file = self.filepath.parent / 'bibliography.bib'
         broken_citations = IssueDetector.check_broken_citations(content, bib_file)
         for key in broken_citations:
             self.issues['critical'].append({
                 'type': 'undefined_citation',
                 'description': f'Citation key not in bibliography: {key}',
-                'details': 'Add to Bibliography_base.bib or fix key',
+                'details': 'Add to bibliography.bib or fix key',
                 'points': 15
             })
             self.score -= 15

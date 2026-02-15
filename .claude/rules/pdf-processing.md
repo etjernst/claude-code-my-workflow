@@ -98,7 +98,7 @@ if len(splits) < 3:
 splits = [0] + splits + [len(text)]
 for i in range(len(splits) - 1):
     chunk = text[splits[i]:splits[i+1]]
-    with open(f'path/to/paper_chunk_{i+1:02d}.txt',
+    with open(rf'path\to\paper_chunk_{i+1:02d}.txt',
               'w', encoding='utf-8') as f:
         f.write(chunk)
 ```

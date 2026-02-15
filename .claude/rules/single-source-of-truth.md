@@ -13,7 +13,7 @@ paths:
 ```
 Beamer .tex (SOURCE OF TRUTH for slides)
   ├── extract_tikz.tex → PDF → SVGs (derived)
-  ├── Bibliography_base.bib (shared)
+  ├── bibliography.bib (shared)
   └── figures/ (shared assets)
 
 Analysis scripts (SOURCE OF TRUTH for results)
