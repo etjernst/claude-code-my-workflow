@@ -124,6 +124,27 @@ Updated `.claude/rules/pdf-processing.md` with an automatic routing strategy bas
 - **Under 40 pages** --- standard pathway (read full text, spot-check, clean up)
 - **40+ pages** --- chunked pathway: split text into ~15-page chunks at section boundaries (numbered sections, all-caps headings, common academic headings) with page-marker fallback. Process each chunk sequentially, writing structured notes (arguments, methods, findings, questions) to a working notes file. Synthesize from notes only---never re-read original. Visual spot-check and cleanup steps preserved.
 
+### 10. Self-review: found and fixed 5 bugs + 3 stale bib references
+
+- `quality_score.py`: bib file lookup used old name `Bibliography_base.bib`---fixed to `bibliography.bib`
+- `slides/Workflow_Overview.tex`: 2 stale `stata/` references in slide content---fixed to `scripts/stata/`
+- `quality_score.py`: messy regex for brace matching---cleaned up
+- `pdf-processing.md`: inconsistent path separators---normalized
+- Fixed 3 more `Bibliography_base.bib` references in `single-source-of-truth.md`, `validate-bib/SKILL.md`, `protect-files.sh`
+
+### 11. Full repo review: found and fixed 10 issues
+
+1. **Renamed `Bibliography_base.bib` → `bibliography.bib`** on disk (all code already referenced the new name)
+2. **`verifier.md`**: `cd Slides` → `cd slides`, `../Preambles` → `../preambles` (wrong capitalization)
+3. **`verifier.md`**: Single-pass xelatex → full 3-pass with bibtex
+4. **`verifier.md`**: Bare `python` → full Anaconda path
+5. **`quality_score.py`**: `missing_clear_all` 10pts → 20pts (match quality-gates.md)
+6. **`quality_score.py`**: `missing_header` 5pts → 10pts (match quality-gates.md)
+7. **`quality_score.py`**: Implemented `missing_import` detection (was declared but never coded)
+8. **`quality_score.py`**: Bare `clear` no longer accepted---must be `clear all`
+9. **`explorations/README.md`**: Stale `R/` folder → `python/`
+10. Quality score still 100/100 after all changes
+
 ## Open Items
 
 - [ ] Environment-aware runt detection (`quality_reports/TODO.md`)

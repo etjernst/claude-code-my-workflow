@@ -19,7 +19,7 @@ This folder is a **sandbox** for experimental and exploratory work. All new idea
 explorations/
 ├── [active-project]/       # Work in progress
 │   ├── README.md           # Goal, hypotheses, status
-│   ├── R/                  # Experimental code
+│   ├── python/             # Experimental code
 │   ├── scripts/            # Test scripts
 │   └── output/             # Results
 └── ARCHIVE/                # Completed or abandoned

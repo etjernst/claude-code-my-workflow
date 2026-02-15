@@ -61,11 +61,11 @@ STATA_RUBRIC = {
     'critical': {
         'syntax_error': {'points': 100, 'auto_fail': True},
         'hardcoded_path': {'points': 20},
-        'missing_clear_all': {'points': 10},
+        'missing_clear_all': {'points': 20},
     },
     'major': {
         'missing_set_seed': {'points': 10},
-        'missing_header': {'points': 5},
+        'missing_header': {'points': 10},
         'missing_log': {'points': 5},
     },
     'minor': {
@@ -112,7 +112,7 @@ class IssueDetector:
 
         # Check for clear all in first 20 lines
         header_region = '\n'.join(lines[:20]).lower()
-        if 'clear all' not in header_region and 'clear' not in header_region:
+        if 'clear all' not in header_region:
             issues['critical'].append({
                 'type': 'missing_clear_all',
                 'description': 'Missing `clear all` near top of file',
@@ -157,6 +157,27 @@ class IssueDetector:
         """Check Python script for quality issues."""
         issues = {'critical': [], 'major': [], 'minor': []}
         lines = content.split('\n')
+
+        # Check for missing imports (common libraries used but not imported)
+        common_modules = {
+            'np': 'numpy', 'pd': 'pandas', 'plt': 'matplotlib.pyplot',
+            'sns': 'seaborn', 'sm': 'statsmodels', 'os': 'os', 'sys': 'sys',
+            'Path': 'pathlib', 're': 're', 'json': 'json',
+        }
+        import_lines = [l for l in lines if l.strip().startswith(('import ', 'from '))]
+        import_block = '\n'.join(import_lines)
+        for alias, module in common_modules.items():
+            # Check if alias is used in code (as prefix with dot, or Path() call)
+            usage_pat = re.compile(rf'\b{re.escape(alias)}[.(]')
+            if usage_pat.search(content):
+                if alias not in import_block and module not in import_block:
+                    issues['critical'].append({
+                        'type': 'missing_import',
+                        'description': f'`{alias}` used but `{module}` not imported',
+                        'details': f'Add `import {module}` or appropriate import statement',
+                        'points': 10
+                    })
+                    break  # One deduction is enough
 
         # Check for missing seed if randomness detected
         random_fns = ['np.random', 'random.', 'torch.manual_seed', 'sklearn']

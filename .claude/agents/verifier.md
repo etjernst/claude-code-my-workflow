@@ -15,8 +15,11 @@ For each modified file, verify that the appropriate output works correctly. Run 
 
 ### For `.tex` files (Beamer slides):
 ```bash
-cd Slides
-xelatex --include-directory=../Preambles -interaction=nonstopmode FILENAME.tex 2>&1 | tail -20
+cd slides
+xelatex --include-directory=../preambles -interaction=nonstopmode FILENAME.tex
+bibtex --include-directory=.. FILENAME
+xelatex --include-directory=../preambles -interaction=nonstopmode FILENAME.tex
+xelatex --include-directory=../preambles -interaction=nonstopmode FILENAME.tex
 ```
 - Check exit code (0 = success)
 - Grep for `Overfull \\hbox` warnings -- count them
@@ -25,7 +28,7 @@ xelatex --include-directory=../Preambles -interaction=nonstopmode FILENAME.tex 2
 
 ### For `.py` files (Python scripts):
 ```bash
-python scripts/python/FILENAME.py 2>&1 | tail -20
+C:\Users\maand\anaconda3\python.exe scripts/python/FILENAME.py
 ```
 - Check exit code
 - Verify output files (PDF, pickle, parquet, CSV) were created
