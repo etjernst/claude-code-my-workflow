@@ -20,6 +20,7 @@ fi
 # Uses basename matching — add full paths for more precision
 # ============================================================
 PROTECTED_PATTERNS=(
+  "CLAUDE.md"
   "bibliography.bib"
   "settings.json"
 )
