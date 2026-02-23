@@ -1,10 +1,9 @@
 ---
 name: create-lecture
-description: Create new Beamer lecture from papers and materials. Guided workflow with notation consistency.
+description: Create a new Beamer lecture from papers, existing slides, Python/Stata scripts, and other materials. Guides the content creation process with notation consistency, pedagogical patterns, and collaborative iteration.
 disable-model-invocation: true
-argument-hint: "[Topic name]"
+argument-hint: "[Topic name, e.g., 'Synthetic Control' or 'Regression Discontinuity']"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash", "Task"]
-context: fork
 ---
 
 # Lecture Creation Workflow
@@ -17,16 +16,16 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 
 ## CONSTRAINTS (Non-Negotiable)
 
-1. **Read the knowledge base FIRST** — notation registry, narrative arc, applications database
+1. **Read the knowledge base FIRST** -- notation registry, narrative arc, applications database
 2. Every new symbol MUST be checked against the notation registry
-3. Motivation before formalism — no exceptions
+3. Motivation before formalism -- no exceptions
 4. Worked example within 2 slides of every definition
 5. Max 2 colored boxes per slide
 6. No `\pause` or overlay commands (check project rules)
 7. Transition slides at major conceptual pivots
 8. Thread at least 1 running empirical application throughout
 9. All citations verified against the bibliography
-10. **Work in batches of 5-10 slides** — share for feedback, don't bulk-dump
+10. **Work in batches of 5-10 slides** -- share for feedback, don't bulk-dump
 
 ---
 
@@ -40,13 +39,13 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 
 ### Phase 1: Paper Analysis (When Papers Provided)
 - Split into chunks, extract key ideas
-- Map paper notation → course notation
+- Map paper notation to course notation
 - Identify slide-worthy content
 - Present summary for approval
 
 ### Phase 2: Structure Proposal
 - Propose outline (5-Act or 3-Part template)
-- List TikZ diagrams and R figures needed
+- List TikZ diagrams and Python/Stata figures needed
 - List new notation to introduce
 - **GATE: User approves before Phase 3**
 
@@ -56,12 +55,12 @@ Create a beautiful, pedagogically excellent Beamer lecture deck.
 - Quality checks during drafting
 
 ### Phase 4: Figures & Code
-- R scripts following conventions
+- Python scripts following conventions for figures
 - TikZ diagrams in Beamer source (single source of truth)
-- Save RDS for future Quarto integration
+- Save estimates for reference (pickle/parquet)
 
 ### Phase 5: Polish & Compile
-- Full 3-pass compilation
+- Full 3-pass compilation (MikTeX --include-directory syntax)
 - Run Devil's Advocate
 - Run Substance Review (if domain reviewer configured)
 - Update knowledge base with new notation

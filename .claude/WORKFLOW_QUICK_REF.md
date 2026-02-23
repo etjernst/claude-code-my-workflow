@@ -52,8 +52,8 @@ Repeat
 
 <!-- Replace with YOUR project's locked-in preferences -->
 
-- [YOUR PATH CONVENTION] (e.g., `here::here()` for R, relative paths for LaTeX)
-- [YOUR SEED CONVENTION] (e.g., `set.seed()` once at top for stochastic code)
+- [YOUR PATH CONVENTION] (e.g., `Path()` for Python, `$root` globals for Stata, relative paths for LaTeX)
+- [YOUR SEED CONVENTION] (e.g., `np.random.seed()` / `set seed` once at top for stochastic code)
 - [YOUR FIGURE STANDARDS] (e.g., white bg, 300 DPI, custom theme)
 - [YOUR COLOR PALETTE] (e.g., institutional colors)
 - [YOUR TOLERANCE THRESHOLDS] (e.g., 1e-6 for point estimates)
@@ -76,7 +76,7 @@ Repeat
 For experimental work, use the **Fast-Track** workflow:
 - Work in `explorations/` folder
 - 60/100 quality threshold (vs. 80/100 for production)
-- No plan needed — just a research value check (2 min)
+- No plan needed --- just a research value check (2 min)
 - See `.claude/rules/exploration-fast-track.md`
 
 ---

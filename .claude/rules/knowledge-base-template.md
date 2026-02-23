@@ -1,14 +1,14 @@
 ---
 paths:
-  - "Slides/**/*.tex"
-  - "Quarto/**/*.qmd"
-  - "scripts/**/*.R"
+  - "slides/**/*.tex"
+  - "scripts/**/*.py"
+  - "scripts/stata/**/*.do"
 ---
 
-# Course Knowledge Base: [YOUR COURSE NAME]
+# Research Knowledge Base: [YOUR PROJECT NAME]
 
 <!-- Fill in the tables below with YOUR domain-specific content.
-     Claude reads this before creating/modifying any lecture content. -->
+     Claude reads this before creating/modifying any content. -->
 
 ## Notation Registry
 
@@ -47,7 +47,7 @@ paths:
 |-------------|---------------|-----------|
 | | | |
 
-## R Code Pitfalls
+## Code Pitfalls (Python/Stata)
 
 | Bug | Impact | Fix |
 |-----|--------|-----|

@@ -8,10 +8,10 @@ Monitors context usage and provides progressive warnings:
 - At 90%: Caution-level warning (complete current task with full quality)
 
 Hook Event: PostToolUse (on common tools)
-Throttles to 30-second intervals when below warning threshold.
+Throttles to 60-second intervals when below warning threshold.
 
 Note: Since direct context % isn't available, this uses a heuristic based on
-conversation file size and tool call count.
+tool call count.
 """
 
 import json
@@ -19,7 +19,6 @@ import os
 import sys
 import time
 from pathlib import Path
-from datetime import datetime
 
 # Colors for terminal output
 CYAN = "\033[0;36m"
@@ -75,8 +74,8 @@ def estimate_context_percentage() -> float:
     """
     Estimate context usage as a percentage.
 
-    This is a heuristic since we don't have direct access to Claude's context
-    window. We use the tool call count as a proxy.
+    Uses tool call count as a proxy since we don't have direct access
+    to Claude's context window.
 
     Returns a value from 0-100 representing estimated context usage.
     """
@@ -87,8 +86,7 @@ def estimate_context_percentage() -> float:
     cache["tool_calls"] = tool_calls
     save_cache(cache)
 
-    # Heuristic: assume ~200 tool calls fills context (very rough estimate)
-    # This is intentionally conservative to trigger warnings early
+    # Heuristic: assume ~150 tool calls fills context (conservative)
     MAX_TOOL_CALLS = 150
 
     percentage = min((tool_calls / MAX_TOOL_CALLS) * 100, 100)
@@ -121,7 +119,7 @@ def get_shown_thresholds() -> dict:
     }
 
 
-def mark_threshold_shown(threshold_type: str, value: int | bool = True) -> None:
+def mark_threshold_shown(threshold_type: str, value=True) -> None:
     """Mark a threshold as shown."""
     cache = read_cache()
     if threshold_type == "learn":
@@ -136,39 +134,34 @@ def mark_threshold_shown(threshold_type: str, value: int | bool = True) -> None:
 
 def format_learn_reminder(percentage: float, threshold: int) -> str:
     """Format a /learn skill reminder."""
-    return f"""
-{CYAN}💡 Context at {percentage:.0f}%{NC}
-
-Non-obvious discovery or reusable workflow?
-→ Consider using {GREEN}/learn{NC} to capture it as a skill before context compacts.
-
-Skills are saved to {MAGENTA}.claude/skills/{NC} and persist across sessions.
-"""
+    return (
+        f"\n{CYAN}Context at ~{percentage:.0f}%{NC}\n\n"
+        f"Non-obvious discovery or reusable workflow?\n"
+        f"Consider using {GREEN}/learn{NC} to capture it as a skill before context compacts.\n\n"
+        f"Skills are saved to {MAGENTA}.claude/skills/{NC} and persist across sessions.\n"
+    )
 
 
 def format_warn_80(percentage: float) -> str:
     """Format the 80% warning message."""
-    return f"""
-{YELLOW}💡 Context at {percentage:.0f}%{NC}
-
-Auto-compact will handle context management automatically.
-No rush — just be aware that context will be summarized soon.
-"""
+    return (
+        f"\n{YELLOW}Context at ~{percentage:.0f}%{NC}\n\n"
+        f"Auto-compact will handle context management automatically.\n"
+        f"No rush---just be aware that context will be summarized soon.\n"
+    )
 
 
 def format_warn_90(percentage: float) -> str:
     """Format the 90% critical warning message."""
-    return f"""
-{RED}⚠️  Context at {percentage:.0f}% — auto-compact approaching{NC}
-
-Complete current task with full quality. Do NOT cut corners or skip verification.
-No context is lost — auto-compact preserves important information.
-
-{YELLOW}Actions to consider:{NC}
-  • Save key decisions to the session log
-  • Ensure current plan status is updated
-  • Mark completed todos as done
-"""
+    return (
+        f"\n{RED}Context at ~{percentage:.0f}%---auto-compact approaching{NC}\n\n"
+        f"Complete current task with full quality. Do NOT cut corners or skip verification.\n"
+        f"No context is lost---auto-compact preserves important information.\n\n"
+        f"{YELLOW}Actions to consider:{NC}\n"
+        f"  - Save key decisions to the session log\n"
+        f"  - Ensure current plan status is updated\n"
+        f"  - Mark completed todos as done\n"
+    )
 
 
 def run_context_monitor() -> int:

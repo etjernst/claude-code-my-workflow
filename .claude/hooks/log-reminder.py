@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Session Log Reminder Hook for Claude Code
 
@@ -9,17 +9,18 @@ and reminds it to update the session log.
 Adapted from: https://gist.github.com/michaelewens/9a1bc5a97f3f9bbb79453e5b682df462
 
 Usage (in .claude/settings.json):
-    "Stop": [{ "hooks": [{ "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-reminder.py" }] }]
+    "Stop": [{ "hooks": [{ "type": "command", "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/log-reminder.py" }] }]
 """
 
 import json
 import sys
 import hashlib
+import tempfile
 from pathlib import Path
 from datetime import datetime
 
 THRESHOLD = 15
-STATE_DIR = Path("/tmp/claude-log-reminder")
+STATE_DIR = Path(tempfile.gettempdir()) / "claude-log-reminder"
 
 
 def get_project_dir():
@@ -30,7 +31,7 @@ def get_project_dir():
         hook_input = {}
 
     # If stop_hook_active, Claude is already continuing from a previous
-    # Stop hook block — let it stop this time to avoid infinite loops.
+    # Stop hook block --- let it stop this time to avoid infinite loops.
     if hook_input.get("stop_hook_active", False):
         sys.exit(0)
 
@@ -82,7 +83,7 @@ def main():
     latest_log, current_mtime = find_latest_log(project_dir)
     today = datetime.now().strftime("%Y-%m-%d")
 
-    # Case 1: No session log exists at all — remind once, then let Claude work
+    # Case 1: No session log exists at all --- remind once, then let Claude work
     if latest_log is None:
         if not state.get("no_log_reminded", False):
             state["no_log_reminded"] = True
@@ -96,16 +97,16 @@ def main():
                 ),
             }
             json.dump(output, sys.stdout)
-        # Already reminded — let Claude proceed (it will create the log)
+        # Already reminded --- let Claude proceed (it will create the log)
         sys.exit(0)
 
-    # Case 2: Log was updated since last check — reset everything
+    # Case 2: Log was updated since last check --- reset everything
     if current_mtime != state["last_mtime"]:
         state = {"counter": 0, "last_mtime": current_mtime, "reminded": False, "no_log_reminded": False}
         save_state(state_path, state)
         sys.exit(0)
 
-    # Case 3: Log not updated — increment counter
+    # Case 3: Log not updated --- increment counter
     state["counter"] += 1
 
     if state["counter"] >= THRESHOLD and not state["reminded"]:
@@ -130,5 +131,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception:
-        # Fail open — never block Claude due to a hook bug
+        # Fail open --- never block Claude due to a hook bug
         sys.exit(0)

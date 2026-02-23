@@ -8,9 +8,9 @@ allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 
 # Manuscript Review
 
-Produce a thorough, constructive review of an academic manuscript — the kind of report a top-journal referee would write.
+Produce a thorough, constructive review of an academic manuscript --- the kind of report a top-journal referee would write.
 
-**Input:** `$ARGUMENTS` — path to a paper (.tex, .pdf, or .qmd), or a filename in `master_supporting_docs/`.
+**Input:** `$ARGUMENTS` --- path to a paper (.tex or .pdf), or a filename in `master_supporting_docs/`.
 
 ---
 
@@ -25,7 +25,7 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 
 3. **Evaluate across 6 dimensions** (see below).
 
-4. **Generate 3-5 "referee objections"** — the tough questions a top referee would ask.
+4. **Generate 3-5 "referee objections"** --- the tough questions a top referee would ask.
 
 5. **Produce the review report.**
 
@@ -38,7 +38,7 @@ Produce a thorough, constructive review of an academic manuscript — the kind o
 ### 1. Argument Structure
 - Is the research question clearly stated?
 - Does the introduction motivate the question effectively?
-- Is the logical flow sound (question → method → results → conclusion)?
+- Is the logical flow sound (question -> method -> results -> conclusion)?
 - Are the conclusions supported by the evidence?
 - Are limitations acknowledged?
 

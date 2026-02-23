@@ -2,8 +2,8 @@
 """
 Verification Reminder Hook
 
-Non-blocking reminder that fires on Write/Edit to academic files (.tex, .qmd, .R)
-to remind about compiling/rendering before marking a task as done.
+Non-blocking reminder that fires on Write/Edit to academic files (.tex, .py, .do)
+to remind about compiling/running before marking a task as done.
 
 Hook Event: PostToolUse (matcher: "Write|Edit")
 Returns: Exit code 0 (non-blocking, reminder visible but doesn't stop work)
@@ -23,14 +23,13 @@ from pathlib import Path
 # Colors for terminal output
 CYAN = "\033[0;36m"
 GREEN = "\033[0;32m"
-YELLOW = "\033[0;33m"
 NC = "\033[0m"  # No color
 
 # Files that need verification
 VERIFY_EXTENSIONS = {
     ".tex": "compile with /compile-latex",
-    ".qmd": "render with quarto render",
-    ".R": "run to verify output"
+    ".py": "run to verify output",
+    ".do": "run with stata-mp to verify output"
 }
 
 # Files to skip
@@ -39,7 +38,8 @@ SKIP_EXTENSIONS = [
     ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg",
     ".lock", ".env", ".gitignore",
     ".svg", ".png", ".jpg", ".pdf",
-    ".bib", ".cls", ".sty"
+    ".bib", ".cls", ".sty",
+    ".sh", ".bat", ".ps1"
 ]
 
 # Directories to skip
@@ -75,9 +75,10 @@ def should_skip(file_path: str) -> bool:
     if path.suffix.lower() in SKIP_EXTENSIONS:
         return True
 
-    # Skip by directory
+    # Skip by directory (normalize separators for Windows)
+    normalized = file_path.replace("\\", "/")
     for skip_dir in SKIP_DIRS:
-        if skip_dir in file_path:
+        if skip_dir in normalized:
             return True
 
     # Skip test files
@@ -88,7 +89,7 @@ def should_skip(file_path: str) -> bool:
     return False
 
 
-def needs_verification(file_path: str) -> tuple[bool, str]:
+def needs_verification(file_path: str) -> tuple:
     """Check if this file needs verification and return the action."""
     path = Path(file_path)
     suffix = path.suffix.lower()
@@ -132,10 +133,10 @@ def was_recently_reminded(file_path: str) -> bool:
 def format_reminder(file_path: str, action: str) -> str:
     """Format the verification reminder."""
     filename = Path(file_path).name
-    return f"""
-{CYAN}📋 Verification reminder:{NC} {filename}
-   → {GREEN}{action}{NC} before marking task complete
-"""
+    return (
+        f"\n{CYAN}Verification reminder:{NC} {filename}\n"
+        f"   -> {GREEN}{action}{NC} before marking task complete\n"
+    )
 
 
 def main() -> int:

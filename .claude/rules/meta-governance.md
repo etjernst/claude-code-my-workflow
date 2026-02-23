@@ -17,7 +17,7 @@ Understanding this distinction is critical for deciding what to commit, what to 
 ### Identity 2: Public Template
 - Others fork this repo to bootstrap their own academic workflows
 - They use different domains (biology, physics, CS, not just economics)
-- They use different tools (pure LaTeX, pure R, Python, Jupyter)
+- They use different tools (pure LaTeX, Python, Stata, R, Jupyter)
 - They need generic patterns, not our specific decisions
 
 ---
@@ -36,8 +36,8 @@ When creating or modifying content, ask:
 - Rules that adapt to user context (path-scoped rules)
 
 **SPECIFIC (keep local or gitignore):**
-- Machine-specific paths (`TEXINPUTS=../Preambles` on macOS)
-- Tool versions (`Quarto 1.3.x vs 1.4.x`)
+- Machine-specific paths (`--include-directory=..\Preambles` on Windows MikTeX)
+- Tool versions (`Python 3.10.x vs 3.11.x`)
 - Institutional requirements (Emory thesis format)
 - Personal preferences (90/100 quality gate for this project)
 - API keys, credentials, local workarounds
@@ -67,9 +67,9 @@ When creating or modifying content, ask:
 **Purpose:** Machine-specific and user-specific learnings
 
 **What goes here:**
-- Machine setup: `[LEARN:latex] XeLaTeX on macOS requires TEXINPUTS=../Preambles`
-- Tool quirks: `[LEARN:quarto] Version 1.4.x has nested div bug, use 1.3.x`
-- Local paths: `[LEARN:files] Bibliography at ~/Dropbox/References/main.bib`
+- Machine setup: `[LEARN:latex] XeLaTeX on Windows MikTeX requires --include-directory=..\Preambles`
+- Tool quirks: `[LEARN:stata] Stata MP requires license file at C:\Program Files\Stata18\`
+- Local paths: `[LEARN:files] Bibliography at C:\Users\me\OneDrive\References\main.bib`
 - Personal workflow: `[LEARN:workflow] I prefer 90/100 for lecture slides, 80/100 for explorations`
 
 **Review cadence:** As needed (no pressure to formalize)
@@ -136,13 +136,13 @@ When creating or modifying content, ask:
 **Bad (too specific):**
 ```markdown
 # Beamer Compilation Rule
-Always use XeLaTeX with TEXINPATHS=../Preambles for Emory slides.
+Always use XeLaTeX with --include-directory=..\Preambles for Emory slides.
 ```
 
 **Good (framework-oriented):**
 ```markdown
 # LaTeX Compilation Rule
-Use project-specific TEXINPATHS if preambles are in separate directory.
+Use project-specific --include-directory if preambles are in separate directory.
 Configure in CLAUDE.md for your setup.
 ```
 
@@ -150,15 +150,15 @@ Configure in CLAUDE.md for your setup.
 
 **Bad (single use case):**
 ```markdown
-Example: Econometric panel data analysis
+Example: Econometric panel data analysis in R
 ```
 
 **Good (diverse use cases):**
 ```markdown
 Examples:
-- Econometrics: Panel regression with fixed effects
-- Biology: Lab protocol validation
-- Physics: Numerical simulation workflow
+- Econometrics: Panel regression with fixed effects (Python/Stata)
+- Biology: Lab protocol validation (Python/Jupyter)
+- Physics: Numerical simulation workflow (Python)
 ```
 
 ### Use Templates Not Prescriptions
@@ -192,7 +192,7 @@ The template CLAUDE.md has `[YOUR PROJECT NAME]`, `[YOUR INSTITUTION]` — this 
 ### Documentation Can Reference Original Use Case
 
 Pedagogically valuable to show real-world example:
-> "Case Study: 6 lectures, 800+ slides, Beamer + Quarto + R replication"
+> "Case Study: 6 lectures, 800+ slides, Beamer + Python/Stata replication"
 
 This shows what's POSSIBLE, not what's REQUIRED.
 

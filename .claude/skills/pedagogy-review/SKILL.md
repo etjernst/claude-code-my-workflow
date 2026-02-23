@@ -1,7 +1,8 @@
 ---
 name: pedagogy-review
 description: Run holistic pedagogical review on lecture slides. Checks narrative arc, student prerequisites, worked examples, notation clarity, and deck pacing.
-argument-hint: "[QMD or TEX filename]"
+disable-model-invocation: true
+argument-hint: "[TEX filename]"
 allowed-tools: ["Read", "Grep", "Glob", "Write", "Task"]
 ---
 
@@ -13,7 +14,7 @@ Perform a comprehensive pedagogical review.
 
 1. **Identify the file** specified in `$ARGUMENTS`
    - If no argument, ask user which lecture to review
-   - If just a name, look in `Quarto/` or `Slides/`
+   - If just a name, look in `slides/`
 
 2. **Launch the pedagogy-reviewer agent** with the full file path
    - The agent checks 13 pedagogical patterns
@@ -30,6 +31,6 @@ Perform a comprehensive pedagogical review.
 
 ## Important Notes
 
-- This is a **read-only review** — no files are edited
+- This is a **read-only review** -- no files are edited
 - Focuses on **pedagogy** not visual layout (use `/visual-audit` for that)
 - For a combined review, use `/slide-excellence` instead

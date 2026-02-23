@@ -1,0 +1,42 @@
+# Patterns excluded from Dropbox sync (used by rsync --exclude-from)
+
+# Git and Claude infrastructure
+.git/
+.claude/
+quality_reports/
+explorations/
+templates/
+preambles/
+scripts/
+
+# Root-level config files
+CLAUDE.md
+MEMORY.md
+README.md
+.syncignore
+.gitignore
+
+# Python artifacts
+__pycache__/
+*.pyc
+.env
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.bbl
+*.blg
+*.synctex.gz
+*.nav
+*.out
+*.snm
+*.toc
+*.vrb
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Dropbox conflict files
+* (1).*
+*conflicted copy*

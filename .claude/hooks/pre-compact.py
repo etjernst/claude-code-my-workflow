@@ -79,7 +79,7 @@ def find_active_plan(project_dir: str) -> dict | None:
     return None
 
 
-def extract_recent_decisions(project_dir: str, limit: int = 3) -> list[str]:
+def extract_recent_decisions(project_dir: str, limit: int = 3) -> list:
     """Extract recent decisions from the session log."""
     logs_dir = Path(project_dir) / "quality_reports" / "session_logs"
     if not logs_dir.exists():
@@ -142,10 +142,10 @@ def append_to_session_log(project_dir: str, trigger: str) -> None:
         pass
 
 
-def format_compaction_message(plan_info: dict | None, decisions: list[str]) -> str:
+def format_compaction_message(plan_info: dict | None, decisions: list) -> str:
     """Format the pre-compaction message."""
     lines = []
-    lines.append(f"\n{YELLOW}⚡ Context compaction starting{NC}")
+    lines.append(f"\n{YELLOW}Context compaction starting{NC}")
     lines.append("")
 
     if plan_info:
@@ -158,7 +158,7 @@ def format_compaction_message(plan_info: dict | None, decisions: list[str]) -> s
         lines.append("")
         lines.append(f"{GREEN}Recent decisions captured:{NC}")
         for d in decisions:
-            lines.append(f"  • {d[:80]}...")
+            lines.append(f"  - {d[:80]}...")
 
     lines.append("")
     lines.append(f"{CYAN}State will be restored after compaction.{NC}")

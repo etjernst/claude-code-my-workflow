@@ -117,44 +117,44 @@ After creating the skill, report:
   Problem: [what it solves]
 ```
 
-## Example: Creating a Skill
+## Example: Creating a skill
 
-User discovers that a specific R package silently drops observations:
+User discovers that statsmodels silently drops observations with missing values:
 
 ```markdown
 ---
-name: fixest-missing-covariate-handling
+name: statsmodels-missing-covariate-handling
 description: |
-  Handle silent observation dropping in fixest when covariates have missing values.
+  Handle silent observation dropping in statsmodels OLS when covariates have NaN.
   Use when: estimates seem wrong, sample size unexpectedly small, or comparing
-  results between packages.
+  results between Python and Stata.
 author: Claude Code Academic Workflow
 version: 1.0.0
 ---
 
-# fixest Missing Covariate Handling
+# statsmodels missing covariate handling
 
 ## Problem
-The fixest package silently drops observations when covariates have NA values,
-which can produce unexpected results when comparing to other packages.
+statsmodels OLS silently drops observations when covariates have NaN values,
+which can produce unexpected results when comparing to Stata.
 
-## Context / Trigger Conditions
-- Sample size in fixest is smaller than expected
-- Results differ from Stata or other R packages
+## Context / trigger conditions
+- Sample size in statsmodels is smaller than expected
+- Results differ from Stata
 - Model has covariates with potential missing values
 
 ## Solution
-1. Check for NA patterns before regression:
-   ```r
-   summary(complete.cases(data[, covariates]))
+1. Check for NaN patterns before regression:
+   ```python
+   df[covariates].isna().sum()
    ```
-2. Explicitly handle NA values or use `na.action` parameter
+2. Explicitly handle NaN with `df.dropna(subset=covariates)` before estimation
 3. Document the expected sample size in comments
 
 ## Verification
-Compare `nobs(model)` with `nrow(data)` — difference indicates dropped obs.
+Compare `model.nobs` with `len(df)`---difference indicates dropped obs.
 
 ## References
-- fixest documentation on missing values
-- [LEARN:r-code] entry in MEMORY.md
+- statsmodels documentation on missing values
+- [LEARN:python] entry in MEMORY.md
 ```

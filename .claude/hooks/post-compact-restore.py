@@ -6,7 +6,7 @@ Fires after compaction (SessionStart with type="compact") to restore context.
 Reads saved state from the session directory and prints it so Claude knows
 where it left off.
 
-Hook Event: SessionStart (matcher: "compact")
+Hook Event: SessionStart (matcher: "compact|resume")
 Returns: Exit code 0 (output to stdout)
 """
 
@@ -14,7 +14,6 @@ import json
 import os
 import sys
 from pathlib import Path
-from datetime import datetime
 
 # Colors for terminal output
 CYAN = "\033[0;36m"
@@ -29,7 +28,6 @@ def get_session_dir() -> Path:
     if not project_dir:
         return Path.home() / ".claude" / "sessions" / "default"
 
-    # Use a hash of the project dir for the session subdir
     import hashlib
     project_hash = hashlib.md5(project_dir.encode()).hexdigest()[:8]
     session_dir = Path.home() / ".claude" / "sessions" / project_hash
@@ -153,7 +151,7 @@ def format_restoration_message(
 
 def main() -> int:
     """Main hook entry point."""
-    # Read hook input (not strictly needed but good practice)
+    # Read hook input
     try:
         hook_input = json.load(sys.stdin)
     except (json.JSONDecodeError, IOError):
@@ -161,7 +159,7 @@ def main() -> int:
 
     # Only run on compact sessions
     session_type = hook_input.get("type", "")
-    if session_type != "compact":
+    if session_type not in ("compact", "resume"):
         return 0
 
     project_dir = os.environ.get("CLAUDE_PROJECT_DIR", "")

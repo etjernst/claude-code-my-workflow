@@ -17,10 +17,11 @@ fi
 
 # ============================================================
 # CUSTOMIZE: Add patterns for files you want to protect
-# Uses basename matching — add full paths for more precision
+# Uses basename matching --- add full paths for more precision
 # ============================================================
 PROTECTED_PATTERNS=(
-  "Bibliography_base.bib"
+  "CLAUDE.md"
+  "bibliography.bib"
   "settings.json"
 )
 
