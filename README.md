@@ -23,23 +23,7 @@ git remote add origin https://github.com/YOUR_USERNAME/my-project.git
 git push -u origin main
 ```
 
-### 2. Set up sync (if applicable)
-
-If your project uses Dropbox or Overleaf, run the one-time setup script before starting Claude Code. It asks for your paths interactively and configures everything:
-
-```bash
-bash templates/setup-sync.sh
-```
-
-This creates a `.sync-config` file (gitignored) with your paths, installs a post-commit hook that auto-pushes on every commit, and generates `sync-pull.sh` for pulling external changes. After setup, do the initial pull:
-
-```bash
-bash sync-pull.sh
-```
-
-If you don't use Dropbox or Overleaf, skip this step and copy your project files into `project/` manually.
-
-### 3. Start Claude Code and paste this prompt
+### 2. Start Claude Code and paste this prompt
 
 ```bash
 claude
@@ -53,11 +37,13 @@ Then paste the following, filling in your project details:
 >
 > I've set up a Claude Code academic workflow. The configuration files are already in this repo. Please read them, understand the workflow, and then **update all configuration files to fit my project**: fill in placeholders in `CLAUDE.md`, adjust rules if needed, and propose any customizations specific to my use case.
 >
+> My project files are in **[Dropbox / Overleaf / local path]**. Set up sync by running `bash templates/setup-sync.sh` with the paths I've given you, then pull existing files with `bash sync-pull.sh`. *(If no external sync, delete this paragraph and just copy my files into `project/`.)*
+>
 > After that, use the plan-first workflow for all non-trivial tasks. Once I approve a plan, switch to contractor mode---coordinate everything autonomously and only come back to me when there's ambiguity or a decision to make.
 >
 > Enter plan mode and start by adapting the workflow configuration for this project.
 
-Claude reads the configuration files, fills in your project name and preferences, then enters contractor mode. You approve the plan and Claude handles the rest.
+Claude reads the configuration files, sets up sync if needed, pulls in your project files, fills in placeholders, and enters contractor mode. You approve the plan and Claude handles the rest.
 
 ## How it works
 
