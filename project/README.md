@@ -22,20 +22,20 @@ bash templates/setup-sync.sh
 
 The script asks which sync targets you use and configures everything:
 
-- Main Dropbox: bidirectional sync between `project/` and a Dropbox folder. Every commit pushes automatically; run `bash sync-from-dropbox.sh` to pull collaborator changes.
-- Overleaf Dropbox: one-way push of output directories (tables, figures) to an Overleaf-synced Dropbox folder on every commit.
+- Main Dropbox: bidirectional sync between `project/` and a Dropbox folder. Every commit pushes automatically; run `bash sync-pull.sh` to pull collaborator changes.
+- Overleaf Dropbox: bidirectional sync with an Overleaf-synced Dropbox folder. Push mappings send outputs (tables, figures) on every commit; pull mappings bring back paper edits at session start.
 
 All paths are stored in `.sync-config` (gitignored). After setup, pull in existing Dropbox contents:
 
 ```bash
-bash sync-from-dropbox.sh
+bash sync-pull.sh
 ```
 
 ### Daily workflow
 
 ```bash
 # Start of session: pull any collaborator changes
-bash sync-from-dropbox.sh
+bash sync-pull.sh
 
 # Work normally---commit as usual
 git add -A && git commit -m "update analysis"
