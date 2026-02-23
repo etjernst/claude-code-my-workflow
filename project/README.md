@@ -30,10 +30,21 @@ Run the one-time setup script from the repo root:
 bash templates/setup-sync.sh
 ```
 
-It will ask for two paths and then:
+The script asks for two paths interactively:
 
-1. Install a git post-commit hook at `.git/hooks/post-commit` (auto-push to Dropbox on every commit)
-2. Create `sync-from-dropbox.sh` at the repo root (manual pull from Dropbox)
+1. Your repo path (e.g., `C:/git/my-project`)
+2. Your Dropbox folder path (e.g., `C:/Users/you/Dropbox/shared-project`)
+
+It then creates:
+
+1. A git post-commit hook at `.git/hooks/post-commit` (auto-pushes `project/` → Dropbox on every commit)
+2. `sync-from-dropbox.sh` at the repo root (manually pulls Dropbox → `project/`)
+
+After running the setup script, pull in the existing Dropbox contents:
+
+```bash
+bash sync-from-dropbox.sh
+```
 
 ### Daily workflow
 
