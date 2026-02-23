@@ -53,6 +53,31 @@ Eight focused agents each check one dimension: proofreading, slide layout, pedag
 
 See `CLAUDE.md` for full configuration, available commands, and quality thresholds.
 
+## Syncing workflow improvements
+
+Infrastructure lives in `.claude/`, `templates/`, `preambles/`, and `scripts/quality_score.py`. Project-specific files (`CLAUDE.md`, `MEMORY.md`, `project/`, `.claude/settings.json`) are never synced.
+
+### Pull updates from the workflow repo into a project
+
+```bash
+cd /path/to/my-project
+bash /path/to/workflow-repo/templates/sync-from-workflow.sh
+git diff          # review
+git add -p        # stage what you want
+git commit
+```
+
+### Push improvements from a project back to the workflow repo
+
+```bash
+cd /path/to/my-project
+bash templates/sync-to-workflow.sh /path/to/workflow-repo
+cd /path/to/workflow-repo
+git diff          # review
+git add -p        # stage what you want
+git commit
+```
+
 ## Prerequisites
 
 - [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
