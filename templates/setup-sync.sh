@@ -1,67 +1,272 @@
 #!/bin/bash
-# One-time setup: wire Dropbox sync for this project
+# One-time setup: configure Dropbox and/or Overleaf sync for this project
 #
-# Usage: bash templates/setup-sync.sh
+# Usage (interactive):
+#   bash templates/setup-sync.sh
+#
+# Usage (non-interactive, for Claude Code):
+#   bash templates/setup-sync.sh \
+#     --dropbox "C:/Users/me/Dropbox/shared-project" \
+#     --overleaf "C:/Users/me/Dropbox/Apps/Overleaf/my-paper" \
+#     --push "project/output/tables:tables,project/output/figures:figures" \
+#     --pull ".:project/paper"
+#
+# All flags are optional. Omit --dropbox if no main Dropbox sync.
+# Omit --overleaf/--push/--pull if no Overleaf sync.
 #
 # What this does:
-#   1. Asks for your repo path and Dropbox path
-#   2. Installs the post-commit hook (auto-pushes project/ to Dropbox on every commit)
-#   3. Creates sync-from-dropbox.sh at repo root (manually pull collaborator changes)
+#   1. Writes .sync-config at repo root (gitignored, contains local paths)
+#   2. Installs the post-commit hook (auto-pushes on every commit)
+#   3. Creates sync-pull.sh at repo root (manually pull external changes)
 
 set -e
 
-echo "=== Dropbox sync setup ==="
-echo ""
+REPO_PATH="$(pwd)"
 
-# Get paths from user
-read -rp "Repo path (e.g., C:/git/my-project): " REPO_PATH
-read -rp "Dropbox path (e.g., C:/Users/you/Dropbox/shared-project): " DROPBOX_PATH
-
-# Validate
-if [[ -z "$REPO_PATH" ]] || [[ -z "$DROPBOX_PATH" ]]; then
-    echo "Error: both paths are required."
+if [[ ! -f "$REPO_PATH/CLAUDE.md" ]]; then
+    echo "Error: run this from the repo root (where CLAUDE.md lives)."
     exit 1
 fi
 
-if [[ ! -d "$REPO_PATH/.git" ]]; then
-    echo "Error: $REPO_PATH does not appear to be a git repository."
-    exit 1
+# --- Parse command-line arguments ---
+DROPBOX_PATH=""
+OVERLEAF_PATH=""
+OVERLEAF_PUSH=""
+OVERLEAF_PULL=""
+NON_INTERACTIVE=false
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --dropbox)    DROPBOX_PATH="$2";  NON_INTERACTIVE=true; shift 2 ;;
+        --overleaf)   OVERLEAF_PATH="$2"; NON_INTERACTIVE=true; shift 2 ;;
+        --push)       OVERLEAF_PUSH="$2"; shift 2 ;;
+        --pull)       OVERLEAF_PULL="$2"; shift 2 ;;
+        *)            echo "Unknown option: $1"; exit 1 ;;
+    esac
+done
+
+# --- Interactive mode if no arguments ---
+if [[ "$NON_INTERACTIVE" == "false" ]]; then
+    echo "=== Sync setup ==="
+    echo ""
+
+    # Main Dropbox
+    read -rp "Do you sync project/ with a main Dropbox folder? (y/n): " USE_DROPBOX
+    if [[ "$USE_DROPBOX" == "y" || "$USE_DROPBOX" == "Y" ]]; then
+        read -rp "Dropbox path (e.g., C:/Users/you/Dropbox/shared-project): " DROPBOX_PATH
+        if [[ -z "$DROPBOX_PATH" ]]; then
+            echo "Error: Dropbox path is required."
+            exit 1
+        fi
+    fi
+
+    # Overleaf Dropbox
+    read -rp "Do you sync with an Overleaf Dropbox folder? (y/n): " USE_OVERLEAF
+    if [[ "$USE_OVERLEAF" == "y" || "$USE_OVERLEAF" == "Y" ]]; then
+        read -rp "Overleaf Dropbox path (e.g., C:/Users/you/Dropbox/Apps/Overleaf/my-paper): " OVERLEAF_PATH
+        if [[ -z "$OVERLEAF_PATH" ]]; then
+            echo "Error: Overleaf path is required."
+            exit 1
+        fi
+
+        echo ""
+        echo "PUSH mappings: directories pushed TO Overleaf on every commit."
+        echo "  Format: local-path:overleaf-path (both relative to their roots)"
+        echo "  Example: project/output/tables:tables"
+        echo "  Enter one per line, empty line to finish:"
+
+        OVERLEAF_PUSH=""
+        while true; do
+            read -rp "  push> " mapping
+            if [[ -z "$mapping" ]]; then break; fi
+            if [[ "$mapping" != *":"* ]]; then
+                echo "  Invalid format. Use local:overleaf (e.g., project/output/tables:tables)"
+                continue
+            fi
+            if [[ -n "$OVERLEAF_PUSH" ]]; then
+                OVERLEAF_PUSH="$OVERLEAF_PUSH,$mapping"
+            else
+                OVERLEAF_PUSH="$mapping"
+            fi
+        done
+
+        echo ""
+        echo "PULL mappings: directories pulled FROM Overleaf at session start."
+        echo "  Format: overleaf-path:local-path (both relative to their roots)"
+        echo "  Example: .:project/paper  (pulls entire Overleaf folder into project/paper/)"
+        echo "  Enter one per line, empty line to finish:"
+
+        OVERLEAF_PULL=""
+        while true; do
+            read -rp "  pull> " mapping
+            if [[ -z "$mapping" ]]; then break; fi
+            if [[ "$mapping" != *":"* ]]; then
+                echo "  Invalid format. Use overleaf:local (e.g., .:project/paper)"
+                continue
+            fi
+            if [[ -n "$OVERLEAF_PULL" ]]; then
+                OVERLEAF_PULL="$OVERLEAF_PULL,$mapping"
+            else
+                OVERLEAF_PULL="$mapping"
+            fi
+        done
+    fi
 fi
 
-# 1. Install post-commit hook
+if [[ -z "$DROPBOX_PATH" && -z "$OVERLEAF_PATH" ]]; then
+    echo "No sync targets configured. Nothing to do."
+    exit 0
+fi
+
+# --- Write .sync-config ---
 echo ""
+echo "Writing .sync-config..."
+cat > "$REPO_PATH/.sync-config" <<CONF
+# Sync configuration (generated by templates/setup-sync.sh)
+# This file is gitignored---it contains machine-specific paths.
+
+REPO_PATH=$REPO_PATH
+DROPBOX_PATH=$DROPBOX_PATH
+OVERLEAF_PATH=$OVERLEAF_PATH
+OVERLEAF_PUSH=$OVERLEAF_PUSH
+OVERLEAF_PULL=$OVERLEAF_PULL
+CONF
+echo "  Created .sync-config"
+
+# --- Install post-commit hook ---
 echo "Installing post-commit hook..."
 HOOK_FILE="$REPO_PATH/.git/hooks/post-commit"
 
 if [[ -f "$HOOK_FILE" ]]; then
-    echo "Warning: $HOOK_FILE already exists. Backing up to post-commit.bak"
+    echo "  Warning: $HOOK_FILE already exists. Backing up to post-commit.bak"
     cp "$HOOK_FILE" "$HOOK_FILE.bak"
 fi
 
-sed -e "s|\[REPO_PATH\]|$REPO_PATH|g" \
-    -e "s|\[DROPBOX_PATH\]|$DROPBOX_PATH|g" \
-    "$REPO_PATH/templates/post-commit-hook.sh" > "$HOOK_FILE"
+cat > "$HOOK_FILE" <<'HOOK'
+#!/bin/bash
+# Post-commit hook: push to Dropbox and/or Overleaf
+# Generated by templates/setup-sync.sh
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+CONFIG="$REPO_ROOT/.sync-config"
+
+if [[ ! -f "$CONFIG" ]]; then
+    echo "post-commit: no .sync-config found. Run bash templates/setup-sync.sh"
+    exit 0
+fi
+
+source "$CONFIG"
+
+# --- Main Dropbox: push project/ ---
+if [[ -n "$DROPBOX_PATH" ]]; then
+    echo "Pushing project/ to Dropbox..."
+    rsync -av --delete \
+        --exclude-from="$REPO_PATH/.syncignore" \
+        "$REPO_PATH/project/" \
+        "$DROPBOX_PATH/"
+    echo "Dropbox push complete."
+fi
+
+# --- Overleaf: push configured directories ---
+if [[ -n "$OVERLEAF_PATH" && -n "$OVERLEAF_PUSH" ]]; then
+    echo "Pushing outputs to Overleaf..."
+    IFS=',' read -ra PAIRS <<< "$OVERLEAF_PUSH"
+    for pair in "${PAIRS[@]}"; do
+        src="${pair%%:*}"
+        dest="${pair##*:}"
+        if [[ -d "$REPO_PATH/$src" ]]; then
+            mkdir -p "$OVERLEAF_PATH/$dest"
+            rsync -av --delete \
+                "$REPO_PATH/$src/" \
+                "$OVERLEAF_PATH/$dest/"
+            echo "  $src -> $dest"
+        fi
+    done
+    echo "Overleaf push complete."
+fi
+HOOK
 chmod +x "$HOOK_FILE"
 echo "  Created $HOOK_FILE"
 
-# 2. Create sync-from-dropbox.sh at repo root
-echo "Creating sync-from-dropbox.sh..."
-SYNC_FILE="$REPO_PATH/sync-from-dropbox.sh"
+# --- Create sync-pull.sh ---
+echo "Creating sync-pull.sh..."
+cat > "$REPO_PATH/sync-pull.sh" <<'PULL'
+#!/bin/bash
+# Pull external changes into the repo
+# Run manually at the start of each session
 
-sed -e "s|\[REPO_PATH\]|$REPO_PATH|g" \
-    -e "s|\[DROPBOX_PATH\]|$DROPBOX_PATH|g" \
-    "$REPO_PATH/templates/sync-from-dropbox.sh" > "$SYNC_FILE"
-chmod +x "$SYNC_FILE"
-echo "  Created $SYNC_FILE"
+CONFIG="$(dirname "$0")/.sync-config"
+
+if [[ ! -f "$CONFIG" ]]; then
+    echo "No .sync-config found. Run bash templates/setup-sync.sh"
+    exit 1
+fi
+
+source "$CONFIG"
+
+# --- Main Dropbox: pull into project/ ---
+if [[ -n "$DROPBOX_PATH" ]]; then
+    echo "Pulling from Dropbox into project/..."
+    rsync -av \
+        --exclude-from="$REPO_PATH/.syncignore" \
+        "$DROPBOX_PATH/" \
+        "$REPO_PATH/project/"
+    echo "Dropbox pull complete."
+fi
+
+# --- Overleaf: pull configured directories ---
+if [[ -n "$OVERLEAF_PATH" && -n "$OVERLEAF_PULL" ]]; then
+    echo "Pulling from Overleaf..."
+    IFS=',' read -ra PAIRS <<< "$OVERLEAF_PULL"
+    for pair in "${PAIRS[@]}"; do
+        src="${pair%%:*}"
+        dest="${pair##*:}"
+        if [[ "$src" == "." ]]; then
+            SRC_PATH="$OVERLEAF_PATH/"
+        else
+            SRC_PATH="$OVERLEAF_PATH/$src/"
+        fi
+        mkdir -p "$REPO_PATH/$dest"
+        rsync -av \
+            "$SRC_PATH" \
+            "$REPO_PATH/$dest/"
+        echo "  $src -> $dest"
+    done
+    echo "Overleaf pull complete."
+fi
+
+echo ""
+echo "Checking git status..."
+cd "$REPO_PATH" && git status --short
+PULL
+chmod +x "$REPO_PATH/sync-pull.sh"
+echo "  Created sync-pull.sh"
 
 echo ""
 echo "=== Setup complete ==="
 echo ""
-echo "How it works:"
-echo "  - Every 'git commit' now rsyncs project/ to Dropbox automatically"
-echo "  - Run 'bash sync-from-dropbox.sh' to pull collaborator changes before starting work"
-echo "  - .syncignore controls what gets excluded from sync"
+if [[ -n "$DROPBOX_PATH" ]]; then
+    echo "Main Dropbox:  $DROPBOX_PATH"
+    echo "  push: every commit syncs project/ to Dropbox (with --delete)"
+    echo "  pull: run 'bash sync-pull.sh' to pull collaborator changes"
+fi
+if [[ -n "$OVERLEAF_PATH" ]]; then
+    echo "Overleaf:      $OVERLEAF_PATH"
+    if [[ -n "$OVERLEAF_PUSH" ]]; then
+        echo "  push (on commit):"
+        IFS=',' read -ra PAIRS <<< "$OVERLEAF_PUSH"
+        for pair in "${PAIRS[@]}"; do
+            echo "    ${pair%%:*} -> ${pair##*:}"
+        done
+    fi
+    if [[ -n "$OVERLEAF_PULL" ]]; then
+        echo "  pull (manual):"
+        IFS=',' read -ra PAIRS <<< "$OVERLEAF_PULL"
+        for pair in "${PAIRS[@]}"; do
+            echo "    ${pair%%:*} -> ${pair##*:}"
+        done
+    fi
+fi
 echo ""
-echo "Configured paths:"
-echo "  Repo:    $REPO_PATH"
-echo "  Dropbox: $DROPBOX_PATH"
+echo "Config saved to .sync-config (gitignored)."
+echo "Run 'bash sync-pull.sh' to do the initial pull."

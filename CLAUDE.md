@@ -99,7 +99,10 @@ project/                              # Synced from Dropbox PEDL/ folder
 # Stata --- project build pipeline
 stata-mp -b do project/data/build/code/ff_master.do
 
-# Stata --- individual scripts
+# Stata --- analysis pipeline
+stata-mp -b do analysis/master.do
+
+# Stata --- individual scripts (legacy, in project/)
 stata-mp -b do project/data/function/code/ff_summary_stats.do
 stata-mp -b do project/data/function/code/ff_stores_distance.do
 
@@ -157,7 +160,7 @@ bash sync-from-dropbox.sh
 
 ---
 
-## Dropbox sync
+## Sync
 
 ```
 [REPO_PATH]:    C:/git/fake-fertilizer
@@ -166,7 +169,7 @@ bash sync-from-dropbox.sh
 
 Only the `PEDL/` subfolder syncs---root-level admin docs in Dropbox are excluded.
 
-See `templates/post-commit-hook.sh` and `templates/sync-from-dropbox.sh`.
+See `templates/sync-from-dropbox.sh`.
 Note: rsync unavailable on this Windows machine; sync scripts use Python fallback.
 
 ---
