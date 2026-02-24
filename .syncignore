@@ -9,10 +9,9 @@ templates/
 preambles/
 scripts/
 
-# Root-level config files
+# Root-level config files (exact names at top level only)
 CLAUDE.md
 MEMORY.md
-README.md
 .syncignore
 .gitignore
 
@@ -40,7 +39,6 @@ Thumbs.db
 # Repo-specific files that should not sync to Dropbox
 CHANGES.md
 bibliography.bib
-figures/
 slides/
 master_supporting_docs/
 
