@@ -18,10 +18,17 @@ cd my-project
 # Keep the workflow repo as 'workflow' remote (for pulling updates later)
 git remote rename origin workflow
 
+# Block accidental pushes to the workflow repo (fetch-only)
+git remote set-url --push workflow DISABLE
+
 # Point 'origin' to your new project repo
 git remote add origin https://github.com/YOUR_USERNAME/my-project.git
 git push -u origin main
 ```
+
+If you want a purely local project with no GitHub remote, skip the last two lines.
+
+To pull workflow updates later: `git fetch workflow && git merge workflow/main` (push is blocked, so you can fetch safely).
 
 ### 2. Start Claude Code and paste this prompt
 
