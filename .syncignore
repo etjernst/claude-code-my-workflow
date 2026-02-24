@@ -1,4 +1,6 @@
-# Patterns excluded from Dropbox sync (used by rsync --exclude-from)
+# Patterns excluded from Dropbox sync
+# Note: these are mirrored as robocopy /XD and /XF flags in the generated
+# sync scripts. If you edit this file, re-run bash templates/setup-sync.sh.
 
 # Git and Claude infrastructure
 .git/
