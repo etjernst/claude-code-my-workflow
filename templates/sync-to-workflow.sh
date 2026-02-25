@@ -7,6 +7,8 @@
 # anything project-specific (CLAUDE.md, MEMORY.md, project/, settings.json, etc.)
 #
 # After running, cd into the workflow repo, review the diff, and commit what you want.
+#
+# Uses robocopy (built into Windows).
 
 set -e
 
@@ -26,12 +28,26 @@ fi
 
 PROJECT_REPO="$(pwd)"
 
+# Convert Git Bash path to Windows path for robocopy
+to_win() { echo "$1" | sed 's|^/c/|C:/|; s|^/d/|D:/|; s|/|\\|g'; }
+
+# robocopy exit codes 0-7 are success, 8+ are errors
+run_robocopy() {
+    robocopy.exe "$@"
+    local rc=$?
+    if [[ $rc -ge 8 ]]; then
+        echo "  robocopy failed (exit code $rc)"
+        return 1
+    fi
+    return 0
+}
+
 echo "=== Sync infrastructure to workflow template ==="
 echo "  From: $PROJECT_REPO"
 echo "  To:   $WORKFLOW_REPO"
 echo ""
 
-# Infrastructure directories (recursive copy, overwrite)
+# Infrastructure directories (mirror: copy + delete extras in destination)
 DIRS=(
     ".claude/agents"
     ".claude/rules"
@@ -44,10 +60,10 @@ DIRS=(
 for dir in "${DIRS[@]}"; do
     if [[ -d "$PROJECT_REPO/$dir" ]]; then
         echo "Syncing $dir/"
-        rsync -av --delete \
-            --exclude="__pycache__" \
-            --exclude="*.pyc" \
-            "$PROJECT_REPO/$dir/" "$WORKFLOW_REPO/$dir/"
+        SRC=$(to_win "$PROJECT_REPO/$dir")
+        DST=$(to_win "$WORKFLOW_REPO/$dir")
+        run_robocopy "$SRC" "$DST" /MIR /XJ /NJH /NJS /NDL /NP \
+            /XD "__pycache__" /XF "*.pyc"
     fi
 done
 
@@ -62,6 +78,7 @@ FILES=(
 for file in "${FILES[@]}"; do
     if [[ -f "$PROJECT_REPO/$file" ]]; then
         echo "Syncing $file"
+        mkdir -p "$(dirname "$WORKFLOW_REPO/$file")"
         cp "$PROJECT_REPO/$file" "$WORKFLOW_REPO/$file"
     fi
 done
