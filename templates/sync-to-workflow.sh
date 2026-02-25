@@ -29,11 +29,11 @@ fi
 PROJECT_REPO="$(pwd)"
 
 # Convert Git Bash path to Windows path for robocopy
-to_win() { echo "$1" | sed 's|^/c/|C:/|; s|^/d/|D:/|; s|/|\\|g'; }
+to_win() { local p="$1"; p="${p/#\/c\//C:/}"; p="${p/#\/d\//D:/}"; echo "${p//\//\\}"; }
 
 # robocopy exit codes 0-7 are success, 8+ are errors
 run_robocopy() {
-    robocopy.exe "$@"
+    MSYS_NO_PATHCONV=1 robocopy.exe "$@"
     local rc=$?
     if [[ $rc -ge 8 ]]; then
         echo "  robocopy failed (exit code $rc)"
