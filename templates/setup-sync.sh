@@ -169,9 +169,10 @@ run_robocopy() {
     return 0
 }
 
-# Exclusions matching .syncignore
-EXCLUDE_DIRS=(".git" ".claude" "quality_reports" "explorations" "templates" "preambles" "scripts" "__pycache__")
-EXCLUDE_FILES=("CLAUDE.md" "MEMORY.md" "README.md" ".syncignore" ".gitignore" ".env" "Thumbs.db" ".DS_Store")
+# Only exclude universal artifacts — infrastructure directories are already
+# out of scope because this sync operates on project/ <-> Dropbox.
+EXCLUDE_DIRS=("__pycache__" ".git")
+EXCLUDE_FILES=(".env" "Thumbs.db" ".DS_Store")
 EXCLUDE_EXTS=("*.pyc" "*.aux" "*.log" "*.bbl" "*.blg" "*.synctex.gz" "*.nav" "*.out" "*.snm" "*.toc" "*.vrb")
 
 XD_FLAGS=()
@@ -241,9 +242,10 @@ run_robocopy() {
     return 0
 }
 
-# Exclusions matching .syncignore
-EXCLUDE_DIRS=(".git" ".claude" "quality_reports" "explorations" "templates" "preambles" "scripts" "__pycache__")
-EXCLUDE_FILES=("CLAUDE.md" "MEMORY.md" "README.md" ".syncignore" ".gitignore" ".env" "Thumbs.db" ".DS_Store")
+# Only exclude universal artifacts — infrastructure directories are already
+# out of scope because this sync operates on project/ <-> Dropbox.
+EXCLUDE_DIRS=("__pycache__" ".git")
+EXCLUDE_FILES=(".env" "Thumbs.db" ".DS_Store")
 EXCLUDE_EXTS=("*.pyc" "*.aux" "*.log" "*.bbl" "*.blg" "*.synctex.gz" "*.nav" "*.out" "*.snm" "*.toc" "*.vrb")
 
 XD_FLAGS=()

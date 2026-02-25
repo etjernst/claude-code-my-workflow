@@ -1,22 +1,26 @@
-# Patterns excluded from Dropbox sync
-# Note: these are mirrored as robocopy /XD and /XF flags in the generated
-# sync scripts. If you edit this file, re-run bash templates/setup-sync.sh.
+# .syncignore — Documents what stays out of Dropbox sync
+#
+# The sync operates between your Dropbox folder and project/ in this repo.
+# Because of that scoping, repo infrastructure (listed below) never touches
+# Dropbox — no exclusion rules needed. Your Dropbox project CAN have
+# identically-named folders (scripts/, templates/, etc.) without conflict.
+#
+# Only universal artifacts (build files, OS junk) are actively filtered
+# by the sync scripts.
+#
+# If you edit the artifact exclusions below, re-run: bash templates/setup-sync.sh
 
-# Git and Claude infrastructure
-.git/
-.claude/
-quality_reports/
-explorations/
-templates/
-preambles/
-scripts/
+# ── Repo infrastructure (stays out of Dropbox by scoping, not filtering) ──
+# These live at repo root, outside project/. Listed here for documentation
+# only — the sync never sees them.
+#
+#   .git/           .claude/         quality_reports/
+#   explorations/   templates/       preambles/
+#   scripts/        slides/          figures/
+#   CLAUDE.md       MEMORY.md        README.md
+#   .syncignore     .gitignore       bibliography.bib
 
-# Root-level config files
-CLAUDE.md
-MEMORY.md
-README.md
-.syncignore
-.gitignore
+# ── Universal artifacts (actively excluded by sync scripts) ──
 
 # Python artifacts
 __pycache__/

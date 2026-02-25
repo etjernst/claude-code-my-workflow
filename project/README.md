@@ -10,7 +10,7 @@ Drop your existing project folder contents here. Do not reorganize---describe th
 
 ## What goes here
 
-Anything your collaborators need: data, code, output, documentation. The repo's infrastructure (`.claude/`, `quality_reports/`, `templates/`, `preambles/`, `scripts/`) stays at the root level and never enters Dropbox.
+Anything your collaborators need: data, code, output, documentation. Everything in your Dropbox folder syncs into `project/` with no name-based filtering---if your Dropbox has a `scripts/` or `templates/` folder, it comes through fine. The repo's own infrastructure (`.claude/`, `quality_reports/`, `templates/`, `preambles/`, `scripts/`) lives at the repo root, outside `project/`, so it stays out of Dropbox by scoping rather than by exclusion rules. Only universal artifacts (`.pyc`, LaTeX build files, OS junk) are actively filtered.
 
 ## Dropbox and Overleaf sync
 
