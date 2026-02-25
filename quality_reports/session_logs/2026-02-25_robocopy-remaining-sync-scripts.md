@@ -47,3 +47,20 @@ Ran end-to-end test against `C:\Users\maand\Dropbox (Personal)\JointDocs`:
 - `setup-sync.sh --dropbox` generates properly quoted `.sync-config` (4/4 pass)
 - Robocopy dry-run pull (`/L` flag) succeeded with exit code 3 (1/1 pass)
 - 8/8 tests passed, 0 failed. Cleanup complete.
+
+---
+
+## Session continued: sync, rhetoric, and hooks cleanup
+
+### Sync exclusion bug fix (commit `a689b1e`)
+Removed infrastructure directory names (`scripts/`, `templates/`, `preambles/`, etc.) from robocopy `/XD` exclusions in all Dropbox sync scripts. The sync is scoped to `project/` ↔ Dropbox, so infrastructure is already out of scope by design. The old name-based exclusions silently skipped user project folders with the same names. Restructured `.syncignore` to document the two-layer model.
+
+### Rhetoric integration (commits `64479bf`, `ad7cffc`)
+Added `templates/rhetoric_of_decks.md` (user-authored framework). Created `.claude/rules/slide-rhetoric.md` codifying the principles. Updated `pedagogy-reviewer.md` with 8 rhetoric checks (R1--R8) evaluated before the 13 pedagogical patterns, plus title sequence test and three-act narrative arc. Updated `slide-auditor.md` with density balance, element justification, and visual hierarchy checks. Updated `/pedagogy-review` and `/slide-excellence` skills.
+
+### Hooks cleanup (commits `3f0b976`, `3ceb76e`)
+- Replaced macOS-only `notify.sh` (`osascript`) with cross-platform `notify.py` (PowerShell WinRT on Windows, osascript on macOS, notify-send on Linux)
+- Deleted dead hooks: `pre-compact.sh` (superseded by `.py`), `post-merge.sh` (never wired)
+- Created `edit-verify.py`: fingerprints files by mtime+size after every Edit/Write; red warning if file unchanged on disk, green confirmation otherwise; backup nudges at 3 and 6 edits for gitignored project files
+- Wired into settings.json alongside verify-reminder.py
+- Cleaned up `__pycache__` in hooks directory
