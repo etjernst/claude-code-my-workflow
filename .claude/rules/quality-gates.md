@@ -22,8 +22,13 @@ paths:
 | Critical | Overfull hbox > 10pt | -10 |
 | Major | Text overflow | -5 |
 | Major | Notation inconsistency | -3 |
+| Major | Label title (not an assertion) | -3 per slide |
+| Major | Generic closing slide | -5 |
+| Major | Slide overload (8+ items) | -3 per slide |
 | Minor | Font size reduction | -1 per slide |
 | Minor | Long lines (>100 chars) | -1 (EXCEPT documented math formulas) |
+| Minor | Box fatigue (2+ boxes/slide) | -2 per slide |
+| Minor | Generic opening slide | -2 |
 
 ## Python Scripts (.py)
 

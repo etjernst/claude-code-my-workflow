@@ -33,10 +33,15 @@ BEAMER_RUBRIC = {
     'major': {
         'text_overflow': {'points': 5},
         'notation_inconsistency': {'points': 3},
+        'label_title': {'points': 3},
+        'generic_closing': {'points': 5},
+        'slide_overload': {'points': 3},
     },
     'minor': {
         'font_size_reduction': {'points': 1},
         'orphan_runt': {'points': 2},
+        'box_fatigue': {'points': 2},
+        'generic_opening': {'points': 2},
     }
 }
 
@@ -440,6 +445,217 @@ class IssueDetector:
         return issues
 
     @staticmethod
+    def _parse_frames(content: str) -> List[Dict]:
+        """Parse Beamer frames into structured dicts for rhetoric checks.
+
+        Returns list of dicts with keys:
+            index, title, title_line, start_line, end_line,
+            body, is_standout, is_title_page
+        """
+        frames = []
+        lines = content.split('\n')
+        # Regex to strip simple LaTeX formatting commands from titles
+        strip_cmd_re = re.compile(r'\\(?:textbf|textit|emph|textrm|textsf|texttt)\{([^}]*)\}')
+        strip_color_re = re.compile(r'\\(?:color|textcolor)\{[^}]*\}\{([^}]*)\}')
+
+        i = 0
+        while i < len(lines):
+            raw = lines[i]
+            stripped = raw.strip()
+
+            # Match \begin{frame} variants
+            m = re.match(r'\\begin\{frame\}(\[.*?\])?\{(.+?)\}\s*$', stripped)
+            if not m:
+                m = re.match(r'\\begin\{frame\}(\[.*?\])?\s*$', stripped)
+                if m:
+                    # Title may come from \frametitle on a subsequent line
+                    pass
+                else:
+                    i += 1
+                    continue
+
+            start_line = i + 1  # 1-indexed
+            opts = m.group(1) or '' if m.lastindex and m.lastindex >= 1 else ''
+            title = m.group(2).strip() if m.lastindex and m.lastindex >= 2 else ''
+            title_line = start_line if title else 0
+            is_standout = 'standout' in opts
+
+            # Collect body until \end{frame}
+            body_lines = []
+            j = i + 1
+            while j < len(lines):
+                if r'\end{frame}' in lines[j]:
+                    break
+                body_lines.append(lines[j])
+                # Pick up \frametitle if no title yet
+                if not title:
+                    ft_m = re.match(r'\s*\\frametitle\{(.+?)\}', lines[j])
+                    if ft_m:
+                        title = ft_m.group(1).strip()
+                        title_line = j + 1
+                j += 1
+
+            end_line = j + 1  # 1-indexed
+            body = '\n'.join(body_lines)
+
+            # Strip LaTeX formatting from title for clean matching
+            clean_title = strip_cmd_re.sub(r'\1', title)
+            clean_title = strip_color_re.sub(r'\1', clean_title)
+            clean_title = re.sub(r'[{}\\]', '', clean_title).strip()
+
+            # Detect title page: contains \titlepage or \maketitle
+            is_title_page = bool(
+                re.search(r'\\(titlepage|maketitle)\b', body)
+            )
+
+            frames.append({
+                'index': len(frames),
+                'title': clean_title,
+                'title_line': title_line,
+                'start_line': start_line,
+                'end_line': end_line,
+                'body': body,
+                'is_standout': is_standout,
+                'is_title_page': is_title_page,
+            })
+
+            i = j + 1
+
+        return frames
+
+    @staticmethod
+    def check_label_titles(frames: List[Dict]) -> List[Dict]:
+        """Detect slide titles that are labels instead of assertions."""
+        label_words = re.compile(
+            r'^(results?|methods?|methodology|data|introduction|background|'
+            r'literature(\s+review)?|overview|summary|discussion|conclusion|'
+            r'appendix|references|model|analysis|motivation|outline|agenda|'
+            r'theory|setup|framework|approach|findings|implications|'
+            r'limitations|contributions?)$',
+            re.IGNORECASE,
+        )
+        issues = []
+        for frame in frames:
+            if frame['is_standout'] or frame['is_title_page']:
+                continue
+            if not frame['title']:
+                continue
+            # Check the cleaned title against known label words
+            if label_words.match(frame['title']):
+                issues.append({
+                    'type': 'label_title',
+                    'description': (
+                        f'Label title "{frame["title"]}" at line '
+                        f'{frame["title_line"]} (slide {frame["index"] + 1})'
+                    ),
+                    'details': 'Slide titles should be assertions, not labels. '
+                               'E.g., "Treatment increased distance by 61 miles" '
+                               'instead of "Results"',
+                    'points': 3,
+                })
+        return issues
+
+    @staticmethod
+    def check_generic_closing(frames: List[Dict]) -> List[Dict]:
+        """Detect generic closing slides like 'Questions?' or 'Thank You'."""
+        if len(frames) < 3:
+            return []
+        last = frames[-1]
+        generic_re = re.compile(
+            r'^(questions?\??|thank\s*you!?|thanks!?|the\s+end|fin|'
+            r'q\s*&?\s*a\??|any\s+questions\??)$',
+            re.IGNORECASE,
+        )
+        if generic_re.match(last['title']):
+            return [{
+                'type': 'generic_closing',
+                'description': (
+                    f'Generic closing slide "{last["title"]}" at line '
+                    f'{last["start_line"]}'
+                ),
+                'details': 'End with a takeaway, call to action, or thought-provoking '
+                           'question instead of a generic closing',
+                'points': 5,
+            }]
+        return []
+
+    @staticmethod
+    def check_slide_overload(frames: List[Dict]) -> List[Dict]:
+        """Detect frames with 8+ \\item entries."""
+        issues = []
+        for frame in frames:
+            if frame['is_standout'] or frame['is_title_page']:
+                continue
+            item_count = len(re.findall(r'\\item\b', frame['body']))
+            if item_count >= 8:
+                issues.append({
+                    'type': 'slide_overload',
+                    'description': (
+                        f'Slide overload ({item_count} items) at line '
+                        f'{frame["start_line"]} (slide {frame["index"] + 1})'
+                    ),
+                    'details': f'Frame has {item_count} \\item entries. '
+                               'One idea per slide; split into multiple slides',
+                    'points': 3,
+                })
+        return issues
+
+    @staticmethod
+    def check_box_fatigue(frames: List[Dict]) -> List[Dict]:
+        """Detect frames with 2+ colored box environments."""
+        box_re = re.compile(
+            r'\\begin\{(keybox|highlightbox|definitionbox|methodbox)\}'
+        )
+        issues = []
+        for frame in frames:
+            if frame['is_standout'] or frame['is_title_page']:
+                continue
+            box_count = len(box_re.findall(frame['body']))
+            if box_count >= 2:
+                issues.append({
+                    'type': 'box_fatigue',
+                    'description': (
+                        f'Box fatigue ({box_count} boxes) at line '
+                        f'{frame["start_line"]} (slide {frame["index"] + 1})'
+                    ),
+                    'details': f'Frame has {box_count} colored box environments. '
+                               'Limit to one per slide to avoid visual clutter',
+                    'points': 2,
+                })
+        return issues
+
+    @staticmethod
+    def check_generic_opening(frames: List[Dict]) -> List[Dict]:
+        """Detect generic opening slides like 'Outline' or 'Agenda'."""
+        if len(frames) < 4:
+            return []
+        # Find the first non-title-page frame
+        first_content = None
+        for frame in frames:
+            if not frame['is_title_page']:
+                first_content = frame
+                break
+        if first_content is None:
+            return []
+        generic_re = re.compile(
+            r'^(outline|agenda|roadmap|plan|table\s+of\s+contents|'
+            r'today|overview|todays?\s+plan)$',
+            re.IGNORECASE,
+        )
+        if generic_re.match(first_content['title']):
+            return [{
+                'type': 'generic_opening',
+                'description': (
+                    f'Generic opening slide "{first_content["title"]}" at line '
+                    f'{first_content["start_line"]}'
+                ),
+                'details': 'First content slide should grab attention and establish '
+                           'stakes, not list an agenda',
+                'points': 2,
+            }]
+        return []
+
+    @staticmethod
     def check_overfull_hbox_risk(content: str) -> List[int]:
         """Detect lines in LaTeX source likely to cause overfull hbox."""
         issues = []
@@ -547,6 +763,29 @@ class QualityScorer:
                 'points': 2
             })
             self.score -= 2
+
+        # Rhetoric checks (slide-level)
+        frames = IssueDetector._parse_frames(content)
+
+        for issue in IssueDetector.check_label_titles(frames):
+            self.issues['major'].append(issue)
+            self.score -= issue['points']
+
+        for issue in IssueDetector.check_generic_closing(frames):
+            self.issues['major'].append(issue)
+            self.score -= issue['points']
+
+        for issue in IssueDetector.check_slide_overload(frames):
+            self.issues['major'].append(issue)
+            self.score -= issue['points']
+
+        for issue in IssueDetector.check_box_fatigue(frames):
+            self.issues['minor'].append(issue)
+            self.score -= issue['points']
+
+        for issue in IssueDetector.check_generic_opening(frames):
+            self.issues['minor'].append(issue)
+            self.score -= issue['points']
 
         self.score = max(0, self.score)
         return self._generate_report()
