@@ -20,10 +20,12 @@ Parse `$ARGUMENTS` for the filename. Resolve path in `slides/`.
 
 **Agent 1: Visual Audit** (slide-auditor)
 - Overflow, font consistency, box fatigue, spacing, images
+- Density balance, element justification, visual hierarchy
 - Save: `quality_reports/[FILE]_visual_audit.md`
 
-**Agent 2: Pedagogical Review** (pedagogy-reviewer)
-- 13 pedagogical patterns, narrative, pacing, notation
+**Agent 2: Pedagogy and Rhetoric Review** (pedagogy-reviewer)
+- 8 rhetoric checks (one idea per slide, titles as assertions, pyramid principle, MB/MC balance, opening/closing quality, devil's advocate, element justification)
+- 13 pedagogical patterns, narrative arc, pacing, notation
 - Save: `quality_reports/[FILE]_pedagogy_report.md`
 
 **Agent 3: Proofreading** (proofreader)
@@ -48,6 +50,7 @@ Parse `$ARGUMENTS` for the filename. Resolve path in `slides/`.
 | Dimension | Critical | Medium | Low |
 |-----------|----------|--------|-----|
 | Visual/Layout | | | |
+| Rhetoric | | | |
 | Pedagogical | | | |
 | Proofreading | | | |
 
