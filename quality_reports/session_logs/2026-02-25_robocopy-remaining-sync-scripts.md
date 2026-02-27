@@ -64,3 +64,27 @@ Added `templates/rhetoric_of_decks.md` (user-authored framework). Created `.clau
 - Created `edit-verify.py`: fingerprints files by mtime+size after every Edit/Write; red warning if file unchanged on disk, green confirmation otherwise; backup nudges at 3 and 6 edits for gitignored project files
 - Wired into settings.json alongside verify-reminder.py
 - Cleaned up `__pycache__` in hooks directory
+
+---
+
+## Session continued: rhetoric scoring + research-feedback skill
+
+### Rhetoric checks in quality scorer (commit `dbf0cde`)
+
+Added five automated rhetoric checks to `scripts/quality_score.py`, enforcing principles from `slide-rhetoric.md`:
+
+| Check | Severity | Points | Detection |
+|-------|----------|--------|-----------|
+| Label titles | Major | -3/slide | Titles like "Results", "Methods" instead of assertions |
+| Generic closing | Major | -5 | Last slide is "Questions?" or "Thank You" |
+| Slide overload | Major | -3/slide | Frames with 8+ `\item` entries |
+| Box fatigue | Minor | -2/slide | 2+ colored box environments on one frame |
+| Generic opening | Minor | -2 | First content slide is bare "Outline" or "Agenda" |
+
+Implementation: new `_parse_frames()` helper on `IssueDetector` parses `\begin{frame}` blocks into structured dicts. Five `@staticmethod` detectors operate on the frame list. Wired into `score_beamer()` after orphan/runt checks. Updated `BEAMER_RUBRIC` dict and `.claude/rules/quality-gates.md`. Verified against test file with all five violations detected (score 79/100).
+
+### Research-feedback skill
+
+Created `~/.claude/skills/research-feedback/` for reviewing student economics research (proposals, WIP, drafts). Supports any input format (PDF, Word, LaTeX, pasted text), flexible output (email draft, structured report, inline comments), asks for student level (Masters/PhD) and subfield interactively if not provided. Core workflow in SKILL.md; detailed six-priority feedback framework in `references/feedback-framework.md` (economic reasoning, causal identification, data fundamentals, design over technique, threats/robustness, scope/contribution).
+
+Feedback on Bao Vu's proposal logged separately: see `2026-02-27_bao-vu-proposal-feedback.md`.

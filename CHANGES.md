@@ -101,9 +101,9 @@ Copied from a previously tested fork, adapted for Windows:
 | `.claude/skills/review-stata/SKILL.md` | `/review-stata` slash command |
 | `preambles/header.tex` | Metropolis Beamer theme with keybox/highlightbox/definitionbox |
 | `scripts/quality_score.py` | Quality scorer supporting Beamer, Python, and Stata |
-| `.syncignore` | Patterns excluded from Dropbox rsync |
-| `templates/post-commit-hook.sh` | Rsync project/ → Dropbox (with `--delete`) |
-| `templates/sync-from-dropbox.sh` | Rsync Dropbox → project/ (no `--delete` for safety) |
+| `.syncignore` | Patterns excluded from Dropbox sync |
+| `templates/post-commit-hook.sh` | Sync project/ → Dropbox (later replaced by `setup-sync.sh`) |
+| `templates/sync-from-dropbox.sh` | Sync Dropbox → project/ (later replaced by `setup-sync.sh`) |
 | `project/README.md` | Explains the project/ convention and Dropbox sync |
 
 ### Phase 4: Adapted agents (5 files)
@@ -174,9 +174,10 @@ Eight skills were unchanged: `commit`, `context-status`, `devils-advocate`, `int
 
 - `project/README.md` explains the project/ convention and sync workflow
 - `.syncignore` excludes infrastructure from sync
-- `templates/post-commit-hook.sh` rsyncs project/ → Dropbox (with `--delete`)
-- `templates/sync-from-dropbox.sh` rsyncs Dropbox → project/ (no `--delete` for safety)
+- `templates/setup-sync.sh` generates post-commit hook and `sync-pull.sh` with safe robocopy flags (`/E /XO`---never deletes remote-only files, never overwrites newer files)
 - `CLAUDE.md` includes Dropbox sync section with placeholders
+
+> **Note:** The original Phase 3 templates (`post-commit-hook.sh`, `sync-from-dropbox.sh`) used rsync with `--delete`. These were replaced by `setup-sync.sh` which uses robocopy `/E /XO` after a `/MIR` incident deleted files from Dropbox.
 
 ### Phase 9: Hook cleanup
 
