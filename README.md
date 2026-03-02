@@ -4,7 +4,7 @@ Source of truth for my Claude Code infrastructure: skills, agents, rules, hooks,
 
 ## How it works
 
-Generic infrastructure lives at **user level** (`~/.claude/`) and applies to every project automatically. This repo is where that infrastructure is developed and maintained. Individual projects only need a lightweight `CLAUDE.md` describing the research question, data, and folder structure.
+Generic infrastructure lives at **user level** (`~/.claude/`) and applies to every project automatically. This repo is where that infrastructure is developed and version-controlled. Individual projects only need a lightweight `CLAUDE.md` describing the research question, data, and folder structure.
 
 ### What lives where
 
@@ -56,20 +56,18 @@ git clone https://github.com/etjernst/claude-code-my-workflow.git my-project
 cd my-project
 git remote rename origin workflow
 git remote set-url --push workflow DISABLE
+# If git or gh added an upstream remote (pedrohcgs), disable pushes to it:
+git remote set-url --push upstream DISABLE
 git remote add origin https://github.com/YOUR_USERNAME/my-project.git
 git push -u origin main
+gh repo set-default YOUR_USERNAME/my-project
 ```
 
 2. Drop existing project files into `project/`.
 
 3. Edit `CLAUDE.md`: fill in the project name, research question, data sources, and folder structure. Everything else is inherited from `~/.claude/`.
 
-4. If using Dropbox sync:
-
-```bash
-bash templates/setup-sync.sh
-bash sync-pull.sh        # initial pull
-```
+4. If using Dropbox sync, run the one-time setup (see below).
 
 5. Start Claude Code and paste the starter prompt:
 
@@ -79,18 +77,7 @@ claude
 
 > I am starting to work on **[PROJECT NAME]** in this repo. **[Describe your project in 2--3 sentences.]**
 >
-> The workflow infrastructure (skills, agents, rules, hooks) is installed at user level. Please read `CLAUDE.md`, fill in any remaining placeholders, explore `project/` to map the file structure, and enter plan mode for my first task.
-
-### Updating infrastructure
-
-After improving skills, rules, or hooks in this repo:
-
-```bash
-cd C:/git/fresh-workflow
-bash install.sh          # re-syncs to ~/.claude/
-```
-
-All projects pick up the changes immediately.
+> The workflow infrastructure (skills, agents, rules, hooks) is installed at user level. Please read `CLAUDE.md`, fill in any remaining placeholders, explore `project/` to map the file structure. If `sync-pull.sh` exists, run it to pull any collaborator changes from Dropbox. Then enter plan mode for my first task.
 
 ## Dropbox and Overleaf sync
 
@@ -98,13 +85,32 @@ The `project/` subdirectory syncs bidirectionally with a Dropbox folder. Everyth
 
 Optional Overleaf support pushes output directories (tables, figures) to an Overleaf-linked Dropbox folder on every commit, and pulls paper edits back at session start.
 
+### What's automatic vs manual
+
+After the one-time setup, almost everything is automatic:
+
+| Action | When | How |
+|--------|------|-----|
+| Push to Dropbox | Every commit | Automatic (post-commit hook) |
+| Conflict detection | Every commit | Automatic (pre-commit hook blocks if Dropbox has newer files) |
+| Pull from Dropbox | Session start | Automatic (starter prompt tells Claude to run `sync-pull.sh`) |
+| Pull after blocked commit | When needed | Claude runs `sync-pull.sh` after the pre-commit hook tells it to |
+
+The only scenario requiring manual intervention is if the pre-commit hook blocks a commit and you're working outside Claude Code (e.g., committing from the terminal). In that case, run `bash sync-pull.sh` and retry the commit.
+
 ### One-time setup
 
-```bash
-# Interactive (asks for paths)
-bash templates/setup-sync.sh
+The setup script configures Dropbox sync paths and installs git hooks. It has two modes:
 
-# Non-interactive (Claude Code can run this)
+Interactive mode asks you for paths one at a time. Use this when setting up from the terminal yourself:
+
+```bash
+bash templates/setup-sync.sh
+```
+
+Non-interactive mode takes all paths as flags. Use this when Claude Code is doing the setup for you (e.g., during the starter prompt), since Claude can't answer interactive prompts:
+
+```bash
 bash templates/setup-sync.sh \
   --dropbox "C:/Users/me/Dropbox/shared-project" \
   --overleaf "C:/Users/me/Dropbox/Apps/Overleaf/my-paper" \
@@ -112,7 +118,7 @@ bash templates/setup-sync.sh \
   --pull ".:project/paper"
 ```
 
-All flags are optional. This creates:
+All flags are optional---omit `--overleaf` if you don't use it, omit `--push`/`--pull` if you only need the main Dropbox sync. The script creates:
 
 | File | Purpose |
 |------|---------|
@@ -121,21 +127,19 @@ All flags are optional. This creates:
 | `.git/hooks/post-commit` | Pushes `project/` to Dropbox after commit |
 | `sync-pull.sh` | Pulls collaborator changes from Dropbox |
 
+After setup, do an initial pull to bring in existing Dropbox contents:
+
+```bash
+bash sync-pull.sh
+```
+
 ### Safety guarantees
 
 - All syncs use `robocopy /E /XO` (never `/MIR`): never deletes destination files, never overwrites newer files
-- **Pre-commit hook** runs a dry-run check against Dropbox before every commit. If a collaborator updated files that are newer than your local copies, the commit is blocked with a list of conflicting files. You must pull first (`bash sync-pull.sh`), then retry the commit
-- **Post-commit hook** pushes `project/` to Dropbox after every successful commit
+- The pre-commit hook runs a dry-run check against Dropbox before every commit. If a collaborator updated files that are newer than your local copies, the commit is blocked with a list of conflicting files
+- The post-commit hook pushes `project/` to Dropbox after every successful commit
 - These are standard git hooks, so they fire on every commit regardless of whether it comes from Claude Code, the terminal, or a GUI
 - Escape hatch: `git commit --no-verify` skips the pre-commit check if you're sure the timestamp difference is harmless
-
-### Daily workflow
-
-```bash
-bash sync-pull.sh                    # start of session: pull collaborator changes
-# ... work normally ...
-git add -A && git commit -m "msg"    # pre-commit checks, then post-commit pushes
-```
 
 If the pre-commit hook blocks:
 
@@ -153,20 +157,26 @@ Then retry:  git commit
 
 Skip setup entirely. Everything works without sync---just manage files manually.
 
-## Propagating infrastructure improvements
+## Infrastructure improvements
 
-If you improve a skill, rule, or hook while working in a project, push it back to this repo and re-install:
+Skills, agents, rules, and hooks live at `~/.claude/` and are edited in place during any project session. If Claude improves a skill while you're working, the improvement is already live for all projects immediately---no propagation step needed.
+
+The only reason to touch this repo is version control: if you want to track what changed, commit the updated files here. To copy changes back:
 
 ```bash
-# From the project repo: copy infrastructure back to the workflow repo
-bash templates/sync-to-workflow.sh C:/git/fresh-workflow
 cd C:/git/fresh-workflow
-git diff                 # review
-git add -p && git commit # commit what you want
-bash install.sh          # re-install to ~/.claude/
+# Overwrite with current user-level versions
+cp -r ~/.claude/skills/.  .claude/skills/
+cp -r ~/.claude/agents/.  .claude/agents/
+cp -r ~/.claude/rules/.   .claude/rules/
+cp -r ~/.claude/hooks/.   .claude/hooks/
+git diff                   # review what changed
+git add -p && git commit   # commit what you want
 ```
 
-To pull workflow updates into an existing project (for project-level files like templates, preambles, scripts):
+This is optional housekeeping, not a required workflow step. Your live infrastructure is always `~/.claude/`, and it's always up to date.
+
+To pull project-level template updates (preambles, scripts) into an existing project:
 
 ```bash
 cd /path/to/my-project
@@ -174,8 +184,6 @@ bash C:/git/fresh-workflow/templates/sync-from-workflow.sh
 git diff                 # review
 git add -p && git commit
 ```
-
-Note: generic infrastructure (skills, agents, rules, hooks) no longer needs per-project syncing since it lives at user level. These scripts are for project-level files like `templates/`, `preambles/`, and `scripts/quality_score.py`.
 
 ## Skills
 
