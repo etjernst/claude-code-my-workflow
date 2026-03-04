@@ -79,6 +79,25 @@ claude
 >
 > The workflow infrastructure (skills, agents, rules, hooks) is installed at user level. Please read `CLAUDE.md`, fill in any remaining placeholders, explore `project/` to map the file structure. If `sync-pull.sh` exists, run it to pull any collaborator changes from Dropbox. Then enter plan mode for my first task.
 
+### Existing repo (no commits to remote)
+
+If you've cloned someone else's repo and want Claude's workflow infrastructure without pushing any Claude files to their remote, use `.git/info/exclude`---a local-only gitignore that is never tracked or committed:
+
+```bash
+cd /path/to/their-repo
+
+# Tell git to ignore Claude workflow files locally
+echo "CLAUDE.md" >> .git/info/exclude
+echo "MEMORY.md" >> .git/info/exclude
+echo "quality_reports/" >> .git/info/exclude
+
+# Create a project CLAUDE.md so Claude knows the context
+cp C:/git/fresh-workflow/CLAUDE.md ./CLAUDE.md
+# Edit CLAUDE.md: fill in project name, research question, folder structure
+```
+
+The user-level infrastructure (`~/.claude/`) already applies automatically---no per-project install needed. The `CLAUDE.md` gives Claude project-specific context (research question, data, commands) while `.git/info/exclude` keeps it invisible to git status, diff, and push.
+
 ## Dropbox and Overleaf sync
 
 The `project/` subdirectory syncs bidirectionally with a Dropbox folder. Everything outside `project/` (slides, scripts, `.claude/`, quality_reports) never touches Dropbox---isolation by scoping, not filtering. Universal artifacts (`.pyc`, LaTeX build files, OS junk) are also excluded; see `.syncignore` for the full list.
