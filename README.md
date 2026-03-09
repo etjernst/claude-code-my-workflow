@@ -96,6 +96,40 @@ cp C:/git/fresh-workflow/CLAUDE.md ./CLAUDE.md
 
 The user-level infrastructure (`~/.claude/`) already applies automatically---no per-project install needed. The `CLAUDE.md` gives Claude project-specific context (research question, data, commands) while `.git/info/exclude` keeps it invisible to git status, diff, and push.
 
+### Existing repo (migrating from project-level Claude infrastructure)
+
+If your repo already has a `.claude/` directory with its own skills, agents, rules, or hooks, the user-level infrastructure from this workflow supersedes all of it. Project-level and user-level rules both apply, but duplicates cause confusion and conflicts.
+
+1. Check what project-level infrastructure exists:
+
+```bash
+ls -R .claude/skills/ .claude/agents/ .claude/rules/ .claude/hooks/ 2>/dev/null
+```
+
+2. Review for anything custom you want to keep. If you wrote project-specific skills or rules that aren't covered by the user-level set, copy them to `~/.claude/` before deleting:
+
+```bash
+# Example: keep a project-specific skill
+cp .claude/skills/my-custom-skill.md ~/.claude/skills/
+```
+
+3. Remove the project-level infrastructure. Keep `.claude/settings.json` if it has project-specific permissions, and keep `.claude/settings.local.json` (already gitignored):
+
+```bash
+rm -rf .claude/skills/ .claude/agents/ .claude/rules/ .claude/hooks/
+# Review .claude/settings.json — remove hook wiring for deleted scripts,
+# keep any project-specific permission overrides
+```
+
+4. Replace the project `CLAUDE.md` with the lightweight template from this repo:
+
+```bash
+cp C:/git/fresh-workflow/CLAUDE.md ./CLAUDE.md
+# Edit: fill in project name, research question, data, folder structure
+```
+
+5. If the project has a `project/` directory, follow the [migration steps](#migrating-from-an-existing-project-directory) below to convert it to a symlink.
+
 ## Linking project files
 
 Project files (code, data, output) live in Dropbox and stay there. A single symlink (`project/` → Dropbox folder) lets git and Claude Code access them without copying or syncing. Edits write directly to Dropbox.
@@ -121,7 +155,7 @@ Then record the Dropbox path in `CLAUDE.md` under the project-specific context s
 
 ### Migrating from an existing project/ directory
 
-If `project/` already exists as a real directory (from an earlier setup), follow these steps before creating the symlink:
+If `project/` already exists as a real directory (from an earlier setup), you need to verify nothing will be lost before replacing it with a symlink.
 
 1. Confirm nothing is uncommitted:
 
@@ -129,24 +163,30 @@ If `project/` already exists as a real directory (from an earlier setup), follow
 git status
 ```
 
-2. Check whether any files in `project/` differ from the Dropbox versions. If the same files exist in both locations, compare them:
+2. Check for files that exist in `project/` but NOT in the Dropbox folder---these would be lost when you delete the directory:
 
 ```bash
+# List files only in project/ (left side), only in Dropbox (right side), or in both
 diff -rq project/ /path/to/Dropbox/folder/
 ```
 
-If files differ, resolve the differences before proceeding.
-
-3. If `project/` contains files that do NOT exist in the Dropbox folder, stop and move them to Dropbox first.
-
-4. Remove `project/` from git tracking and delete the directory:
+Look for lines starting with `Only in project/`---these files have no copy in Dropbox. Move them to the Dropbox folder before proceeding:
 
 ```bash
-git rm -r --cached project/   # if tracked
-rm -rf project/
+# Example: move a file that only exists locally
+cp project/analysis/clean.do /path/to/Dropbox/folder/analysis/
 ```
 
-5. Create the symlink (see above) and commit.
+3. For files that exist in both locations, check whether the versions differ. Lines showing `differ` mean the two copies are not identical. Decide which version to keep (usually the more recent one) and make sure it's the one in Dropbox.
+
+4. Once everything in `project/` is safely in the Dropbox folder, remove it:
+
+```bash
+git rm -r --cached project/   # untrack from git (if tracked)
+rm -rf project/                # delete the directory
+```
+
+5. Create the symlink (see [New project](#new-project) above) and commit.
 
 ## Infrastructure improvements
 
