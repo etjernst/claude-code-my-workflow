@@ -18,7 +18,7 @@ Generic infrastructure lives at **user level** (`~/.claude/`) and applies to eve
 | User | `~/.claude/CLAUDE.md` | Global preferences (OS, shell, writing style, git) |
 | Project | `CLAUDE.md` | Research question, data paths, folder structure |
 | Project | `quality_reports/` | Session logs, plans |
-| Project | `project/` | Your actual research files |
+| Project | `project/` | Symlink to Dropbox folder |
 
 ### Architecture
 
@@ -30,7 +30,7 @@ Generic infrastructure lives at **user level** (`~/.claude/`) and applies to eve
 
 any-project/                        ← Project-specific only
 ├── CLAUDE.md                       ← Research question, data, commands
-├── project/                        ← Your files
+├── project/ → Dropbox/...          ← Symlink to Dropbox folder
 ├── slides/  preambles/  figures/   ← Beamer infrastructure
 ├── scripts/  explorations/         ← Analysis code
 └── quality_reports/                ← Session logs, plans
@@ -63,9 +63,9 @@ git push -u origin main
 gh repo set-default YOUR_USERNAME/my-project
 ```
 
-2. Drop existing project files into `project/`.
+2. Create a symlink from `project/` to your Dropbox folder (see [Linking project files](#linking-project-files) below).
 
-3. Edit `CLAUDE.md`: fill in the project name, research question, data sources, and folder structure. Everything else is inherited from `~/.claude/`.
+3. Edit `CLAUDE.md`: fill in the project name, research question, data sources, Dropbox path, and folder structure. Everything else is inherited from `~/.claude/`.
 
 4. Start Claude Code and paste the starter prompt:
 
@@ -95,6 +95,58 @@ cp C:/git/fresh-workflow/CLAUDE.md ./CLAUDE.md
 ```
 
 The user-level infrastructure (`~/.claude/`) already applies automatically---no per-project install needed. The `CLAUDE.md` gives Claude project-specific context (research question, data, commands) while `.git/info/exclude` keeps it invisible to git status, diff, and push.
+
+## Linking project files
+
+Project files (code, data, output) live in Dropbox and stay there. A single symlink (`project/` → Dropbox folder) lets git and Claude Code access them without copying or syncing. Edits write directly to Dropbox.
+
+Git tracks code files through the symlink using an ignore-everything-then-whitelist approach in `.gitignore`. Code files (`.do`, `.py`, `.R`, `.tex`, etc.) are tracked regardless of where they sit in the Dropbox folder structure. Everything else (data, output, figures) is ignored by default.
+
+### New project
+
+Create the symlink from the repo root. On Windows, use an elevated (admin) terminal:
+
+```bash
+# Windows (requires admin privileges)
+cmd //c "mklink /D project C:\Users\me\Dropbox\shared-project"
+```
+
+On macOS/Linux:
+
+```bash
+ln -s ~/Dropbox/shared-project project
+```
+
+Then record the Dropbox path in `CLAUDE.md` under the project-specific context section, so Claude can reference it in future sessions.
+
+### Migrating from an existing project/ directory
+
+If `project/` already exists as a real directory (from an earlier setup), follow these steps before creating the symlink:
+
+1. Confirm nothing is uncommitted:
+
+```bash
+git status
+```
+
+2. Check whether any files in `project/` differ from the Dropbox versions. If the same files exist in both locations, compare them:
+
+```bash
+diff -rq project/ /path/to/Dropbox/folder/
+```
+
+If files differ, resolve the differences before proceeding.
+
+3. If `project/` contains files that do NOT exist in the Dropbox folder, stop and move them to Dropbox first.
+
+4. Remove `project/` from git tracking and delete the directory:
+
+```bash
+git rm -r --cached project/   # if tracked
+rm -rf project/
+```
+
+5. Create the symlink (see above) and commit.
 
 ## Infrastructure improvements
 
@@ -143,15 +195,6 @@ All available via `/command` in any project.
 | `/context-status` | Check context usage and session health |
 | `/learn` | Extract reusable knowledge into a skill |
 
-## Prerequisites
-
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) CLI
-- XeLaTeX via MikTeX (Windows) or TeX Live
-- Python (Anaconda)
-- Stata (stata-mp on PATH)
-- GitHub CLI (`gh`) for PR workflows
-
-Not all are needed---install only what your project uses. Claude Code is the only hard requirement.
 
 ## Origin
 

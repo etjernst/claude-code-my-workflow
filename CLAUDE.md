@@ -9,8 +9,8 @@ Branch: main
 
 ## Project setup checklist (first session)
 
-1. Drop existing project files into `project/`
-2. Fill in the sections below (research question, data, folder structure)
+1. Create symlink: `project/` → your Dropbox folder (see README for instructions)
+2. Fill in the sections below (Dropbox path, research question, data, folder structure)
 3. Run `/compile-latex` on a test file to verify MikTeX works
 4. Delete this checklist section
 
@@ -42,7 +42,7 @@ repo/
 ├── quality_reports/             # Plans, session logs
 ├── explorations/                # Research sandbox
 ├── master_supporting_docs/      # Reference papers
-└── project/                     # YOUR PROJECT FILES
+└── project/ → [DROPBOX_PATH]    # Symlink to Dropbox folder
 ```
 
 All skills, agents, rules, and hooks are inherited from `~/.claude/` and apply automatically. No project-level `.claude/` directory needed for generic infrastructure.
@@ -50,6 +50,10 @@ All skills, agents, rules, and hooks are inherited from `~/.claude/` and apply a
 ---
 
 ## Project-specific context
+
+### Dropbox path
+
+`project/` symlinks to: [e.g., C:\Users\me\Dropbox\shared-project]
 
 ### Research question
 

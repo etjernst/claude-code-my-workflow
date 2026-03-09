@@ -30,5 +30,12 @@
 ### Kept (session logs)
 - Session logs mentioning sync were left for the historical record
 
-## Open questions
-- Symlink approach not yet implemented — next step
+## Symlink approach implemented
+
+Replaced the robocopy sync system with a symlink design:
+- `project/` is a symlink to the Dropbox folder (edits write directly, no sync needed)
+- `.gitignore` uses ignore-everything-then-whitelist: all files in project/ ignored by default, code extensions (.do, .py, .R, .tex, .bib, .sh, .sql, .jl, .m, .ipynb, .ado) whitelisted
+- Directories un-ignored with `!project/**/` so git traverses the tree
+- README documents new project setup, migration from existing project/ directory
+- CLAUDE.md template includes Dropbox path placeholder
+- Removed old data/ and output/ gitignore rules (now covered by project/** default ignore)
