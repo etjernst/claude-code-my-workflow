@@ -1,5 +1,5 @@
 #!/bin/bash
-# install.sh --- Sync workflow infrastructure to user-level ~/.claude/
+# install.sh --- Install workflow infrastructure to user-level ~/.claude/
 #
 # Run after pulling updates from the workflow repo:
 #   cd C:/git/fresh-workflow && bash install.sh

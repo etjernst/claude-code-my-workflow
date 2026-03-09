@@ -11,9 +11,8 @@ Branch: main
 
 1. Drop existing project files into `project/`
 2. Fill in the sections below (research question, data, folder structure)
-3. If using Dropbox: `bash templates/setup-sync.sh` then `bash sync-pull.sh`
-4. Run `/compile-latex` on a test file to verify MikTeX works
-5. Delete this checklist section
+3. Run `/compile-latex` on a test file to verify MikTeX works
+4. Delete this checklist section
 
 ---
 
@@ -43,7 +42,7 @@ repo/
 ├── quality_reports/             # Plans, session logs
 ├── explorations/                # Research sandbox
 ├── master_supporting_docs/      # Reference papers
-└── project/                     # YOUR PROJECT FILES (Dropbox sync target)
+└── project/                     # YOUR PROJECT FILES
 ```
 
 All skills, agents, rules, and hooks are inherited from `~/.claude/` and apply automatically. No project-level `.claude/` directory needed for generic infrastructure.
