@@ -79,22 +79,76 @@ claude
 
 ### Existing repo (no commits to remote)
 
-If you've cloned someone else's repo and want Claude's workflow infrastructure without pushing any Claude files to their remote, use `.git/info/exclude`---a local-only gitignore that is never tracked or committed:
+If you've cloned someone else's repo and want Claude's workflow infrastructure without leaving any trace---no Claude files, no co-authoring lines in commits, nothing visible to collaborators:
 
 ```bash
 cd /path/to/their-repo
 
-# Tell git to ignore Claude workflow files locally
+# Tell git to ignore all Claude-generated files locally
 echo "CLAUDE.md" >> .git/info/exclude
 echo "MEMORY.md" >> .git/info/exclude
+echo ".claude/" >> .git/info/exclude
 echo "quality_reports/" >> .git/info/exclude
 
-# Create a project CLAUDE.md so Claude knows the context
-cp C:/git/fresh-workflow/CLAUDE.md ./CLAUDE.md
-# Edit CLAUDE.md: fill in project name, research question, folder structure
+# Suppress "with Claude" co-authoring in commit messages (local to this repo only)
+git config --local claude.coauthor false
 ```
 
-The user-level infrastructure (`~/.claude/`) already applies automatically---no per-project install needed. The `CLAUDE.md` gives Claude project-specific context (research question, data, commands) while `.git/info/exclude` keeps it invisible to git status, diff, and push.
+Verify the exclude works by creating a test file and checking:
+
+```bash
+touch CLAUDE.md
+git check-ignore -v CLAUDE.md
+# Expected: .git/info/exclude:7:CLAUDE.md    CLAUDE.md
+```
+
+If `git check-ignore` prints nothing, the repo's `.gitignore` likely has a negation pattern (e.g., `!/**/*.md`) that overrides the exclude file. In that case, append the exclusions to `.gitignore` itself and hide that change:
+
+```bash
+echo "" >> .gitignore
+echo "# Claude workflow (local only)" >> .gitignore
+echo "CLAUDE.md" >> .gitignore
+echo "MEMORY.md" >> .gitignore
+echo ".claude/" >> .gitignore
+echo "quality_reports/" >> .gitignore
+git update-index --assume-unchanged .gitignore
+```
+
+Once the exclusions are working, create a minimal `CLAUDE.md`:
+
+```bash
+cat > CLAUDE.md << 'EOF'
+# [PROJECT NAME]
+
+[One-sentence description of the research project and its core question.]
+
+## Core principles
+
+- Stealth mode --- do not add co-authoring lines to commits in this repo
+- Plan first --- enter plan mode before non-trivial tasks
+- Verify after --- compile/run and confirm output at the end of every task
+
+## Project-specific context
+
+### Research question
+
+[What is the main research question?]
+
+### Data sources
+
+[Describe the data: source, access, unit of observation, time period.]
+
+### Commands
+
+[How to run scripts, compile files, etc. in this repo.]
+
+## File structure map
+
+[Describe the repo's folder layout so Claude can navigate it.]
+EOF
+```
+
+The user-level infrastructure (`~/.claude/`) already applies automatically---no per-project install needed. The `CLAUDE.md` gives Claude project-specific context while the exclude (or `--assume-unchanged`) keeps everything invisible to git status, diff, and push. This minimal template avoids creating extra folders (`quality_reports/`, `explorations/`, etc.) that the full template assumes.
 
 ### Existing repo (migrating from project-level Claude infrastructure)
 
